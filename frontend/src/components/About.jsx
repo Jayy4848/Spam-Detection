@@ -1,199 +1,96 @@
 import React from 'react';
 
-function About() {
+const TECH = ['Django REST', 'React 18', 'scikit-learn', 'Naive Bayes', 'TF-IDF', 'Logistic Regression', 'Random Forest', 'Gradient Boosting', 'SVM', 'NLTK', 'Python 3.10', 'SQLite'];
+
+const FEATURES = [
+  ['🔍', 'Multi-class SMS classification (Spam, OTP, Promo, Important, Personal)'],
+  ['🎣', 'Phishing & fraud detection with URL analysis'],
+  ['🧠', 'Explainable AI — word-level importance highlighting'],
+  ['📊', 'Risk scoring system (0–100) with actionable advice'],
+  ['🌐', 'Multi-language support: English, Hindi, Marathi'],
+  ['🔄', 'Adaptive learning from user feedback'],
+  ['📈', 'Real-time analytics dashboard'],
+  ['⚡', 'Sub-100ms prediction with intelligent caching'],
+  ['🏗️', 'Production-grade architecture with monitoring'],
+  ['🔒', 'Privacy-first: messages hashed, never stored'],
+];
+
+export default function About() {
   return (
-    <div className="about-container">
-      <div className="about-card">
-        <h2>🛡️ About Smart SMS Security Assistant</h2>
+    <div className="about-page">
+      <div className="about-hero">
+        <div className="hero-badge" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', background: '#ede9fe', color: '#6366f1', fontSize: '0.8rem', fontWeight: 600, padding: '0.35rem 0.9rem', borderRadius: '9999px', marginBottom: '1rem', textTransform: 'uppercase', letterSpacing: '0.02em' }}>
+          Master's Level Project
+        </div>
+        <h1>TextGuard AI</h1>
         <p>
-          Smart SMS Security Assistant is an AI-powered web application designed to protect users
-          from spam, phishing, and fraudulent SMS messages. Using advanced machine learning and
-          natural language processing techniques, it automatically classifies messages and detects
-          potential security threats.
+          An enterprise-grade SMS security assistant built with advanced machine learning,
+          explainable AI, and production-ready architecture.
         </p>
       </div>
 
-      <div className="about-card">
-        <h2>🧠 Core Features</h2>
-        <ul className="feature-list">
-          <li>
-            <strong>Multi-Category Classification:</strong> Automatically categorizes messages into
-            Spam, Promotion, OTP, Important, and Personal categories
-          </li>
-          <li>
-            <strong>Dual-Model Approach:</strong> Utilizes both Naive Bayes and BERT models for
-            accurate predictions with model comparison
-          </li>
-          <li>
-            <strong>Phishing Detection:</strong> Identifies suspicious keywords, URLs, and patterns
-            commonly used in phishing attacks
-          </li>
-          <li>
-            <strong>Explainable AI:</strong> Highlights important words and provides confidence
-            scores to explain classification decisions
-          </li>
-          <li>
-            <strong>Multilingual Support:</strong> Supports English, Hinglish, and Marathi text
-            analysis
-          </li>
-          <li>
-            <strong>Real-Time Analysis:</strong> Instant classification results with detailed
-            risk assessment
-          </li>
-          <li>
-            <strong>User Feedback:</strong> Allows users to correct classifications and help
-            improve the model
-          </li>
-          <li>
-            <strong>Analytics Dashboard:</strong> Comprehensive statistics and visualizations
-            of analyzed messages
-          </li>
-        </ul>
-      </div>
-
-      <div className="about-card">
-        <h2>💻 Technology Stack</h2>
-        <div className="row">
-          <div className="col-md-6">
-            <h5>Frontend</h5>
-            <ul>
-              <li>React.js 18</li>
-              <li>Bootstrap 5</li>
-              <li>Chart.js for visualizations</li>
-              <li>Axios for API calls</li>
-            </ul>
-          </div>
-          <div className="col-md-6">
-            <h5>Backend</h5>
-            <ul>
-              <li>Django 4.2</li>
-              <li>Django REST Framework</li>
-              <li>SQLite Database</li>
-              <li>CORS Headers</li>
-            </ul>
+      <div className="about-grid">
+        <div className="about-card">
+          <h3>🎯 What This Solves</h3>
+          <div className="feature-items">
+            <div className="feature-item-row"><span>📱</span><span>SMS fraud costs billions annually — users need real-time protection</span></div>
+            <div className="feature-item-row"><span>🎣</span><span>Phishing via SMS (smishing) is the fastest-growing attack vector</span></div>
+            <div className="feature-item-row"><span>🤷</span><span>Users can't tell legitimate OTPs from fake ones without AI help</span></div>
+            <div className="feature-item-row"><span>🌍</span><span>Existing tools don't support Indian languages like Hindi & Marathi</span></div>
           </div>
         </div>
-        <div className="row mt-3">
-          <div className="col-md-12">
-            <h5>Machine Learning</h5>
-            <ul>
-              <li>scikit-learn (TF-IDF + Naive Bayes)</li>
-              <li>Transformers (BERT/DistilBERT)</li>
-              <li>PyTorch</li>
-              <li>NLTK for text processing</li>
-            </ul>
+
+        <div className="about-card">
+          <h3>👥 Who This Is For</h3>
+          <div className="feature-items">
+            <div className="feature-item-row"><span>👴</span><span>Elderly users vulnerable to SMS scams and fraud</span></div>
+            <div className="feature-item-row"><span>🏦</span><span>Banking customers receiving financial alerts</span></div>
+            <div className="feature-item-row"><span>🛒</span><span>Online shoppers receiving OTPs and delivery updates</span></div>
+            <div className="feature-item-row"><span>🏢</span><span>Enterprises monitoring employee SMS communications</span></div>
+          </div>
+        </div>
+
+        <div className="about-card">
+          <h3>🧠 ML Architecture</h3>
+          <div className="feature-items">
+            <div className="feature-item-row"><span>1️⃣</span><span>Text preprocessing with URL/phone/email tokenization</span></div>
+            <div className="feature-item-row"><span>2️⃣</span><span>TF-IDF vectorization with n-gram features (1–3)</span></div>
+            <div className="feature-item-row"><span>3️⃣</span><span>5 ML models trained and compared via cross-validation</span></div>
+            <div className="feature-item-row"><span>4️⃣</span><span>Best model auto-selected by F1-weighted score</span></div>
+            <div className="feature-item-row"><span>5️⃣</span><span>Confidence calibration for reliable probability estimates</span></div>
+          </div>
+        </div>
+
+        <div className="about-card">
+          <h3>⚙️ Tech Stack</h3>
+          <div className="tech-tags">
+            {TECH.map(t => <span key={t} className="tech-tag">{t}</span>)}
           </div>
         </div>
       </div>
 
-      <div className="about-card">
-        <h2>🔍 How It Works</h2>
-        <ol>
-          <li>
-            <strong>Text Preprocessing:</strong> The input message is cleaned and normalized
-            for analysis
-          </li>
-          <li>
-            <strong>Feature Extraction:</strong> TF-IDF vectorization extracts important
-            features from the text
-          </li>
-          <li>
-            <strong>Classification:</strong> Both Naive Bayes and BERT models analyze the
-            message independently
-          </li>
-          <li>
-            <strong>Phishing Detection:</strong> Suspicious keywords, URLs, and patterns are
-            identified
-          </li>
-          <li>
-            <strong>Explanation Generation:</strong> Important words are highlighted and
-            confidence scores calculated
-          </li>
-          <li>
-            <strong>Result Presentation:</strong> Comprehensive results with risk assessment
-            are displayed
-          </li>
-        </ol>
+      <div className="about-card" style={{ marginBottom: '1.25rem' }}>
+        <h3>✨ Key Features</h3>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '0.6rem' }}>
+          {FEATURES.map(([icon, text], i) => (
+            <div key={i} className="feature-item-row">
+              <span>{icon}</span><span style={{ fontSize: '0.88rem', color: 'var(--text-secondary)' }}>{text}</span>
+            </div>
+          ))}
+        </div>
       </div>
 
-      <div className="about-card">
-        <h2>🎯 Use Cases</h2>
-        <ul className="feature-list">
-          <li>Personal SMS security screening</li>
-          <li>Banking and financial message verification</li>
-          <li>OTP and verification code identification</li>
-          <li>Promotional message filtering</li>
-          <li>Phishing and fraud prevention</li>
-          <li>Message organization and prioritization</li>
-        </ul>
-      </div>
-
-      <div className="about-card">
-        <h2>📊 Model Performance</h2>
-        <p>
-          Our dual-model approach combines the speed of Naive Bayes with the accuracy of BERT:
-        </p>
-        <ul>
-          <li>
-            <strong>Naive Bayes:</strong> Fast, lightweight, and efficient for real-time
-            classification with good accuracy on common patterns
-          </li>
-          <li>
-            <strong>BERT:</strong> Deep learning model that understands context and nuances
-            in language for superior accuracy
-          </li>
-          <li>
-            <strong>Ensemble:</strong> Combining both models provides robust predictions with
-            confidence scoring
-          </li>
-        </ul>
-      </div>
-
-      <div className="privacy-notice">
-        <h4>🔒 Privacy & Security</h4>
-        <p>
-          We take your privacy seriously. Your SMS messages are analyzed in real-time and are
-          NOT stored permanently. Only anonymized metadata (category, confidence score, timestamp)
-          is saved for system improvement and analytics.
-        </p>
-        <ul className="mb-0">
-          <li>No message content is stored in the database</li>
-          <li>Only SHA-256 hashes are saved for duplicate detection</li>
-          <li>All data is processed locally on the server</li>
-          <li>No third-party data sharing</li>
-          <li>User feedback is anonymized</li>
-        </ul>
-      </div>
-
-      <div className="about-card">
-        <h2>👨‍💻 Project Information</h2>
-        <p>
-          This project was developed as a Master's level final year project demonstrating
-          practical application of machine learning, natural language processing, and full-stack
-          web development skills.
-        </p>
-        <p>
-          <strong>Key Learning Outcomes:</strong>
-        </p>
-        <ul>
-          <li>Implementation of multiple ML models for comparison</li>
-          <li>Real-world NLP application development</li>
-          <li>Full-stack web application architecture</li>
-          <li>RESTful API design and implementation</li>
-          <li>Data visualization and analytics</li>
-          <li>Security and privacy considerations</li>
-        </ul>
-      </div>
-
-      <div className="about-card text-center">
-        <h3>🚀 Ready to Secure Your Messages?</h3>
-        <p>Start analyzing your SMS messages now!</p>
-        <a href="/" className="btn btn-primary btn-lg">
-          Go to Home
-        </a>
+      <div className="privacy-card">
+        <div className="privacy-card-icon">🔒</div>
+        <div>
+          <h3>Privacy & Security Commitment</h3>
+          <p>
+            Your messages are never stored in plain text. All content is SHA-256 hashed before logging.
+            Only anonymized metadata (category, confidence, timestamp) is retained for analytics.
+            This system is designed with privacy-by-default principles and GDPR-ready architecture.
+          </p>
+        </div>
       </div>
     </div>
   );
 }
-
-export default About;

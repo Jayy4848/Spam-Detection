@@ -1,305 +1,212 @@
 import React, { useState, useEffect } from 'react';
 import { getStats } from '../services/api';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  ArcElement,
-  LineElement,
-  PointElement,
-  Title,
-  Tooltip,
-  Legend,
-} from 'chart.js';
-import { Bar, Pie, Line } from 'react-chartjs-2';
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  ArcElement,
-  LineElement,
-  PointElement,
-  Title,
-  Tooltip,
-  Legend
-);
+const CAT_COLORS = {
+  spam: '#ef4444', promotion: '#f59e0b', otp: '#3b82f6',
+  important: '#8b5cf6', personal: '#10b981',
+};
 
-function Dashboard() {
+export default function Dashboard() {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
-    fetchStats();
+    getStats()
+      .then(data => {
+        setStats(data);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('Stats error:', err);
+        setError('Could not load statistics. Make sure the backend is running on port 8000.');
+        setLoading(false);
+      });
   }, []);
 
-  const fetchStats = async () => {
-    try {
-      const data = await getStats();
-      setStats(data);
-      setError('');
-    } catch (err) {
-      setError('Failed to load statistics. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="dashboard-container">
-        <div className="spinner"></div>
+  if (loading) return (
+    <div className="dashboard-page">
+      <div className="analyzing-state">
+        <div className="pulse-dot" /><div className="pulse-dot" /><div className="pulse-dot" />
+        Loading dashboard...
       </div>
-    );
-  }
+    </div>
+  );
 
-  if (error) {
-    return (
-      <div className="dashboard-container">
-        <div className="alert alert-danger">{error}</div>
+  if (error) return (
+    <div className="dashboard-page">
+      <div className="page-header">
+        <h1>Analytics Dashboard</h1>
       </div>
-    );
-  }
-
-  if (!stats) {
-    return (
-      <div className="dashboard-container">
-        <div className="alert alert-info">No data available yet. Start analyzing messages!</div>
+      <div className="error-alert">
+        ⚠️ {error}
+        <button
+          onClick={() => { setError(''); setLoading(true); getStats().then(setStats).catch(() => setError('Still cannot connect. Is the backend running?')).finally(() => setLoading(false)); }}
+          style={{ marginLeft: '1rem', padding: '0.25rem 0.75rem', borderRadius: '6px', border: '1px solid', cursor: 'pointer', fontSize: '0.8rem' }}
+        >
+          Retry
+        </button>
       </div>
-    );
-  }
+    </div>
+  );
 
-  // Category Distribution Chart
-  const categoryData = {
-    labels: stats.category_distribution.map(item => item.category.toUpperCase()),
-    datasets: [
-      {
-        label: 'Messages by Category',
-        data: stats.category_distribution.map(item => item.count),
-        backgroundColor: [
-          'rgba(231, 76, 60, 0.7)',
-          'rgba(243, 156, 18, 0.7)',
-          'rgba(33, 150, 243, 0.7)',
-          'rgba(156, 39, 176, 0.7)',
-          'rgba(80, 200, 120, 0.7)',
-        ],
-        borderColor: [
-          'rgba(231, 76, 60, 1)',
-          'rgba(243, 156, 18, 1)',
-          'rgba(33, 150, 243, 1)',
-          'rgba(156, 39, 176, 1)',
-          'rgba(80, 200, 120, 1)',
-        ],
-        borderWidth: 2,
-      },
-    ],
-  };
+  const total = stats?.total_messages || 0;
+  const spam = stats?.spam_count || 0;
+  const phishing = stats?.phishing_count || 0;
+  const safe = total - spam - phishing;
+  const spamRate = total > 0 ? ((spam / total) * 100).toFixed(1) : 0;
 
-  // Daily Trends Chart
-  const trendsData = {
-    labels: stats.daily_trends.map(item => {
-      const date = new Date(item.date);
-      return `${date.getMonth() + 1}/${date.getDate()}`;
-    }),
-    datasets: [
-      {
-        label: 'Messages Analyzed',
-        data: stats.daily_trends.map(item => item.count),
-        borderColor: 'rgba(74, 144, 226, 1)',
-        backgroundColor: 'rgba(74, 144, 226, 0.2)',
-        tension: 0.4,
-        fill: true,
-      },
-    ],
-  };
+  const catDist = stats?.category_distribution || [];
+  const maxCat = Math.max(...catDist.map(c => c.count), 1);
 
-  // Spam vs Ham Pie Chart
-  const spamHamData = {
-    labels: ['Spam', 'Ham (Not Spam)'],
-    datasets: [
-      {
-        data: [stats.spam_count, stats.ham_count],
-        backgroundColor: [
-          'rgba(231, 76, 60, 0.7)',
-          'rgba(80, 200, 120, 0.7)',
-        ],
-        borderColor: [
-          'rgba(231, 76, 60, 1)',
-          'rgba(80, 200, 120, 1)',
-        ],
-        borderWidth: 2,
-      },
-    ],
-  };
+  const trends = stats?.daily_trends || [];
+  const maxTrend = Math.max(...trends.map(t => t.count), 1);
 
   return (
-    <div className="dashboard-container">
-      <h2 className="text-center mb-4">📊 Analytics Dashboard</h2>
+    <div className="dashboard-page">
+      <div className="page-header">
+        <h1>Analytics Dashboard</h1>
+        <p>Real-time insights from your SMS analysis history</p>
+      </div>
 
-      {/* Stats Grid */}
+      {/* Stats */}
       <div className="stats-grid">
         <div className="stat-card">
-          <div className="stat-number">{stats.total_messages}</div>
-          <div className="stat-label">Total Messages Analyzed</div>
+          <div className="stat-icon purple">📊</div>
+          <div className="stat-info">
+            <div className="stat-num">{total}</div>
+            <div className="stat-label">Total Analyzed</div>
+          </div>
         </div>
         <div className="stat-card">
-          <div className="stat-number" style={{ color: '#e74c3c' }}>
-            {stats.spam_count}
+          <div className="stat-icon red">🚨</div>
+          <div className="stat-info">
+            <div className="stat-num">{spam}</div>
+            <div className="stat-label">Spam Detected</div>
+            <div className="stat-change up">{spamRate}% of total</div>
           </div>
-          <div className="stat-label">Spam Messages</div>
         </div>
         <div className="stat-card">
-          <div className="stat-number" style={{ color: '#50c878' }}>
-            {stats.ham_count}
+          <div className="stat-icon yellow">🎣</div>
+          <div className="stat-info">
+            <div className="stat-num">{phishing}</div>
+            <div className="stat-label">Phishing Attempts</div>
           </div>
-          <div className="stat-label">Ham Messages</div>
         </div>
         <div className="stat-card">
-          <div className="stat-number" style={{ color: '#f39c12' }}>
-            {stats.phishing_count}
+          <div className="stat-icon green">✅</div>
+          <div className="stat-info">
+            <div className="stat-num">{safe > 0 ? safe : 0}</div>
+            <div className="stat-label">Safe Messages</div>
           </div>
-          <div className="stat-label">Phishing Detected</div>
         </div>
-      </div>
-
-      {/* Spam Ratio */}
-      <div className="chart-container">
-        <h4 className="chart-title">Spam Detection Rate</h4>
-        <div className="confidence-bar">
-          <div
-            className="confidence-fill"
-            style={{
-              width: `${stats.spam_ratio}%`,
-              background: stats.spam_ratio > 50
-                ? 'linear-gradient(90deg, #e74c3c, #c0392b)'
-                : 'linear-gradient(90deg, #50c878, #45b068)',
-            }}
-          >
-            {stats.spam_ratio.toFixed(1)}% Spam
+        <div className="stat-card">
+          <div className="stat-icon blue">💬</div>
+          <div className="stat-info">
+            <div className="stat-num">{stats?.feedback_count || 0}</div>
+            <div className="stat-label">User Feedback</div>
           </div>
         </div>
       </div>
 
-      {/* Charts Row 1 */}
-      <div className="row">
-        <div className="col-md-6 mb-4">
-          <div className="chart-container">
-            <h4 className="chart-title">Category Distribution</h4>
-            <Bar
-              data={categoryData}
-              options={{
-                responsive: true,
-                plugins: {
-                  legend: {
-                    display: false,
-                  },
-                },
-                scales: {
-                  y: {
-                    beginAtZero: true,
-                    ticks: {
-                      stepSize: 1,
-                    },
-                  },
-                },
-              }}
-            />
+      <div className="charts-grid">
+        {/* Category distribution */}
+        <div className="chart-card">
+          <div className="chart-card-header">
+            <div>
+              <div className="chart-card-title">Category Breakdown</div>
+              <div className="chart-card-sub">Distribution of message types</div>
+            </div>
           </div>
-        </div>
-        <div className="col-md-6 mb-4">
-          <div className="chart-container">
-            <h4 className="chart-title">Spam vs Ham</h4>
-            <Pie
-              data={spamHamData}
-              options={{
-                responsive: true,
-                plugins: {
-                  legend: {
-                    position: 'bottom',
-                  },
-                },
-              }}
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Daily Trends */}
-      <div className="chart-container">
-        <h4 className="chart-title">7-Day Trend</h4>
-        <Line
-          data={trendsData}
-          options={{
-            responsive: true,
-            plugins: {
-              legend: {
-                display: false,
-              },
-            },
-            scales: {
-              y: {
-                beginAtZero: true,
-                ticks: {
-                  stepSize: 1,
-                },
-              },
-            },
-          }}
-        />
-      </div>
-
-      {/* Average Confidence */}
-      {Object.keys(stats.average_confidence).length > 0 && (
-        <div className="chart-container">
-          <h4 className="chart-title">Average Confidence by Category</h4>
-          <div className="model-comparison">
-            {Object.entries(stats.average_confidence).map(([category, confidence]) => (
-              <div key={category} className="model-card">
-                <h6>{category.toUpperCase()}</h6>
-                <div className="stat-number" style={{ fontSize: '1.5rem' }}>
-                  {(confidence * 100).toFixed(1)}%
+          {catDist.length === 0 ? (
+            <div className="empty-state">
+              <div className="empty-state-icon">📭</div>
+              <h3>No data yet</h3>
+              <p>Analyze some messages to see the breakdown</p>
+            </div>
+          ) : (
+            <div className="category-list">
+              {catDist.map((cat, i) => (
+                <div key={i} className="category-row">
+                  <div className="category-dot" style={{ background: CAT_COLORS[cat.category] || '#6b7280' }} />
+                  <span className="category-name">{cat.category}</span>
+                  <div className="category-bar-wrap">
+                    <div
+                      className="category-bar-fill"
+                      style={{
+                        width: `${(cat.count / maxCat) * 100}%`,
+                        background: CAT_COLORS[cat.category] || '#6b7280'
+                      }}
+                    />
+                  </div>
+                  <span className="category-pct">
+                    {total > 0 ? ((cat.count / total) * 100).toFixed(0) : 0}%
+                  </span>
                 </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* 7-day trend */}
+        <div className="chart-card">
+          <div className="chart-card-header">
+            <div>
+              <div className="chart-card-title">7-Day Activity</div>
+              <div className="chart-card-sub">Messages analyzed per day</div>
+            </div>
+          </div>
+          {trends.length === 0 ? (
+            <div className="empty-state">
+              <div className="empty-state-icon">📈</div>
+              <h3>No trend data</h3>
+              <p>Data will appear after daily usage</p>
+            </div>
+          ) : (
+            <div className="trend-bars">
+              {trends.map((t, i) => (
+                <div key={i} className="trend-col">
+                  <span className="trend-val">{t.count}</span>
+                  <div
+                    className="trend-bar"
+                    style={{ height: `${Math.max((t.count / maxTrend) * 80, 4)}px` }}
+                  />
+                  <span className="trend-day">
+                    {new Date(t.date).toLocaleDateString('en', { weekday: 'short' })}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Confidence by category */}
+      {stats?.average_confidence && Object.keys(stats.average_confidence).length > 0 && (
+        <div className="chart-card">
+          <div className="chart-card-header">
+            <div>
+              <div className="chart-card-title">Average Model Confidence by Category</div>
+              <div className="chart-card-sub">How confident the AI is per message type</div>
+            </div>
+          </div>
+          <div className="category-list" style={{ marginTop: '0.5rem' }}>
+            {Object.entries(stats.average_confidence).map(([cat, conf]) => (
+              <div key={cat} className="category-row">
+                <div className="category-dot" style={{ background: CAT_COLORS[cat] || '#6b7280' }} />
+                <span className="category-name">{cat}</span>
+                <div className="category-bar-wrap">
+                  <div
+                    className="category-bar-fill"
+                    style={{ width: `${(conf || 0) * 100}%`, background: CAT_COLORS[cat] || '#6b7280' }}
+                  />
+                </div>
+                <span className="category-pct">{((conf || 0) * 100).toFixed(0)}%</span>
               </div>
             ))}
           </div>
         </div>
       )}
-
-      {/* Additional Stats */}
-      <div className="chart-container">
-        <h4 className="chart-title">Additional Statistics</h4>
-        <div className="row">
-          <div className="col-md-4">
-            <p><strong>User Feedback Received:</strong></p>
-            <p className="stat-number" style={{ fontSize: '2rem' }}>
-              {stats.feedback_count}
-            </p>
-          </div>
-          <div className="col-md-4">
-            <p><strong>Language Distribution:</strong></p>
-            {stats.language_distribution.map(item => (
-              <p key={item.language}>
-                {item.language.toUpperCase()}: {item.count}
-              </p>
-            ))}
-          </div>
-          <div className="col-md-4">
-            <p><strong>System Status:</strong></p>
-            <p className="text-success">✓ All systems operational</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Refresh Button */}
-      <div className="text-center mt-4">
-        <button className="btn btn-primary" onClick={fetchStats}>
-          🔄 Refresh Statistics
-        </button>
-      </div>
     </div>
   );
 }
-
-export default Dashboard;

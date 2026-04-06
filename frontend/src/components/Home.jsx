@@ -1,198 +1,172 @@
 import React, { useState } from 'react';
 import { predictSMS } from '../services/api';
 import ResultCard from './ResultCard';
-import AdvancedAnalysis from './AdvancedAnalysis';
-import AIFeatures from './AIFeatures';
 
-function Home() {
+const SAMPLES = {
+  spam: "WINNER!! You've been selected for a FREE iPhone 15! Click http://bit.ly/claim-now to claim your prize before it expires. Act NOW!",
+  promo: "Exclusive offer for you! Get 50% OFF on all electronics this weekend only. Shop at our store. Valid till Sunday.",
+  otp: "Your OTP for login is 847291. Valid for 10 minutes. Do NOT share this code with anyone.",
+  important: "Alert: Rs.15,000 debited from your account ending 4821 on 06-Apr. Available balance: Rs.42,300.",
+  personal: "Hey! Are you free this evening? Thinking of grabbing dinner at that new place downtown.",
+};
+
+const FEATURES = [
+  { icon: '🔍', title: 'Spam Detection', desc: 'Identifies spam and promotional messages instantly' },
+  { icon: '🎣', title: 'Phishing Guard', desc: 'Detects phishing links and fraud attempts' },
+  { icon: '🧠', title: 'Explainable AI', desc: 'Shows exactly why a message was flagged' },
+  { icon: '📊', title: 'Risk Scoring', desc: 'Quantified risk score from 0–100' },
+  { icon: '🌐', title: 'Multi-language', desc: 'Supports English, Hindi & Marathi' },
+  { icon: '⚡', title: 'Real-time', desc: 'Instant analysis in under 100ms' },
+];
+
+export default function Home() {
   const [message, setMessage] = useState('');
   const [language, setLanguage] = useState('en');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
 
-  const sampleMessages = {
-    spam: "WINNER!! You have won a $1000 prize! Click here to claim now!",
-    promotion: "50% off on all items this weekend! Shop now at our store.",
-    otp: "Your OTP is 123456. Valid for 10 minutes. Do not share.",
-    important: "Your bank account has been debited Rs. 5000. Balance: Rs. 15000.",
-    personal: "Hi! How are you? Let's meet for coffee tomorrow."
-  };
-
   const handleAnalyze = async () => {
-    if (!message.trim()) {
-      setError('Please enter a message to analyze');
-      return;
-    }
-
+    if (!message.trim()) return;
     setLoading(true);
     setError('');
     setResult(null);
-
     try {
       const data = await predictSMS(message, language);
       setResult(data);
     } catch (err) {
-      setError(err.error || 'Failed to analyze message. Please try again.');
+      setError(err.error || 'Analysis failed. Please check your connection and try again.');
     } finally {
       setLoading(false);
     }
   };
 
-  const loadSample = (type) => {
-    setMessage(sampleMessages[type]);
-    setResult(null);
-    setError('');
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && e.ctrlKey) handleAnalyze();
   };
 
   return (
-    <div className="home-container">
-      {/* Hero Section */}
-      <div className="hero-section">
-        <h1>🛡️ Smart SMS Security Assistant</h1>
-        <p>AI-powered SMS classification and phishing detection</p>
-      </div>
+    <main className="home-page">
+      {/* Hero */}
+      <section className="hero">
+        <div className="hero-badge">🛡️ AI-Powered Security</div>
+        <h1>
+          Protect yourself from<br />
+          <span className="gradient-text">SMS fraud & phishing</span>
+        </h1>
+        <p>
+          Paste any SMS message and get an instant AI-powered risk assessment,
+          fraud detection, and actionable security advice.
+        </p>
+        <div className="hero-stats">
+          <div className="hero-stat">
+            <div className="hero-stat-num">98.9%</div>
+            <div className="hero-stat-label">Accuracy</div>
+          </div>
+          <div className="hero-stat">
+            <div className="hero-stat-num">&lt;100ms</div>
+            <div className="hero-stat-label">Response Time</div>
+          </div>
+          <div className="hero-stat">
+            <div className="hero-stat-num">5</div>
+            <div className="hero-stat-label">ML Models</div>
+          </div>
+          <div className="hero-stat">
+            <div className="hero-stat-num">3</div>
+            <div className="hero-stat-label">Languages</div>
+          </div>
+        </div>
+      </section>
 
-      {/* Input Card */}
-      <div className="input-card">
-        <h4 className="mb-3">Enter SMS Message</h4>
-        
+      {/* Analyzer */}
+      <div className="analyzer-card">
+        <div className="analyzer-card-header">
+          <h2>Analyze SMS Message</h2>
+          <span className="char-count">{message.length} / 1000</span>
+        </div>
+
         <textarea
           className="sms-textarea"
-          placeholder="Paste your SMS message here..."
+          placeholder="Paste your SMS message here... (Ctrl+Enter to analyze)"
           value={message}
-          onChange={(e) => setMessage(e.target.value)}
+          onChange={e => setMessage(e.target.value)}
+          onKeyDown={handleKeyDown}
           maxLength={1000}
         />
-        
-        <div className="d-flex justify-content-between align-items-center mt-2">
-          <small className="text-muted">{message.length}/1000 characters</small>
-        </div>
 
-        {/* Language Selector */}
-        <div className="language-selector">
-          <label>Language:</label>
-          <div className="form-check form-check-inline">
-            <input
-              className="form-check-input"
-              type="radio"
-              name="language"
-              id="lang-en"
-              value="en"
-              checked={language === 'en'}
-              onChange={(e) => setLanguage(e.target.value)}
-            />
-            <label className="form-check-label" htmlFor="lang-en">
-              English
-            </label>
-          </div>
-          <div className="form-check form-check-inline">
-            <input
-              className="form-check-input"
-              type="radio"
-              name="language"
-              id="lang-hi"
-              value="hi"
-              checked={language === 'hi'}
-              onChange={(e) => setLanguage(e.target.value)}
-            />
-            <label className="form-check-label" htmlFor="lang-hi">
-              Hindi/Hinglish
-            </label>
-          </div>
-          <div className="form-check form-check-inline">
-            <input
-              className="form-check-input"
-              type="radio"
-              name="language"
-              id="lang-mr"
-              value="mr"
-              checked={language === 'mr'}
-              onChange={(e) => setLanguage(e.target.value)}
-            />
-            <label className="form-check-label" htmlFor="lang-mr">
-              Marathi
-            </label>
+        <div className="sample-section">
+          <div className="sample-label">Try a sample</div>
+          <div className="sample-chips">
+            {Object.entries(SAMPLES).map(([type, text]) => (
+              <button
+                key={type}
+                className={`chip chip-${type}`}
+                onClick={() => { setMessage(text); setResult(null); setError(''); }}
+              >
+                {type.charAt(0).toUpperCase() + type.slice(1)}
+              </button>
+            ))}
           </div>
         </div>
 
-        {/* Sample Messages */}
-        <div className="mt-3">
-          <p className="mb-2"><strong>Try sample messages:</strong></p>
-          <div className="d-flex flex-wrap gap-2">
-            <button
-              className="btn btn-sm btn-outline-primary"
-              onClick={() => loadSample('spam')}
-            >
-              Spam
-            </button>
-            <button
-              className="btn btn-sm btn-outline-warning"
-              onClick={() => loadSample('promotion')}
-            >
-              Promotion
-            </button>
-            <button
-              className="btn btn-sm btn-outline-info"
-              onClick={() => loadSample('otp')}
-            >
-              OTP
-            </button>
-            <button
-              className="btn btn-sm btn-outline-secondary"
-              onClick={() => loadSample('important')}
-            >
-              Important
-            </button>
-            <button
-              className="btn btn-sm btn-outline-success"
-              onClick={() => loadSample('personal')}
-            >
-              Personal
-            </button>
+        <div className="lang-section">
+          <span className="lang-label">Language:</span>
+          <div className="lang-options">
+            {[['en', 'English'], ['hi', 'Hindi'], ['mr', 'Marathi']].map(([val, label]) => (
+              <button
+                key={val}
+                className={`lang-btn ${language === val ? 'active' : ''}`}
+                onClick={() => setLanguage(val)}
+              >
+                {label}
+              </button>
+            ))}
           </div>
         </div>
 
-        {/* Analyze Button */}
-        <div className="text-center mt-4">
-          <button
-            className="btn-analyze"
-            onClick={handleAnalyze}
-            disabled={loading || !message.trim()}
-          >
-            {loading ? 'Analyzing...' : '🔍 Analyze Message'}
-          </button>
-        </div>
+        <button
+          className="btn-analyze"
+          onClick={handleAnalyze}
+          disabled={loading || !message.trim()}
+        >
+          {loading ? (
+            <>
+              <div className="pulse-dot" />
+              <div className="pulse-dot" />
+              <div className="pulse-dot" />
+              Analyzing...
+            </>
+          ) : (
+            <> 🔍 Analyze Message</>
+          )}
+        </button>
 
-        {/* Error Message */}
         {error && (
-          <div className="alert alert-danger mt-3" role="alert">
-            {error}
-          </div>
+          <div className="error-alert">⚠️ {error}</div>
         )}
+
+        <div className="privacy-bar">
+          🔒 Messages are hashed and never stored permanently · Privacy-first design
+        </div>
       </div>
 
-      {/* Loading Spinner */}
-      {loading && <div className="spinner"></div>}
-
-      {/* Result Card */}
+      {/* Result */}
       {result && !loading && (
-        <>
+        <div className="result-wrapper">
           <ResultCard result={result} message={message} />
-          {result.ai_features && <AIFeatures aiFeatures={result.ai_features} />}
-          <AdvancedAnalysis result={result} />
-        </>
+        </div>
       )}
 
-      {/* Privacy Notice */}
-      <div className="privacy-notice mt-4">
-        <p className="mb-0">
-          <strong>🔒 Privacy Notice:</strong> Your messages are analyzed locally and not stored permanently.
-          Only anonymized metadata is saved for improving the system.
-        </p>
+      {/* Features */}
+      <div className="features-strip">
+        {FEATURES.map((f, i) => (
+          <div className="feature-tile" key={i}>
+            <div className="feature-tile-icon">{f.icon}</div>
+            <div className="feature-tile-title">{f.title}</div>
+            <div className="feature-tile-desc">{f.desc}</div>
+          </div>
+        ))}
       </div>
-    </div>
+    </main>
   );
 }
-
-export default Home;

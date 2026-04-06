@@ -1,59 +1,44 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 function Navbar() {
   const location = useLocation();
+  const [open, setOpen] = useState(false);
+
+  const links = [
+    { to: '/', label: 'Analyzer' },
+    { to: '/dashboard', label: 'Dashboard' },
+    { to: '/about', label: 'About' },
+  ];
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark navbar-custom">
-      <div className="container">
-        <Link className="navbar-brand" to="/">
-          🛡️ Smart SMS Security
+    <nav className="navbar-custom">
+      <div className="navbar-inner">
+        <Link to="/" className="navbar-brand-wrap">
+          <div className="brand-icon">🛡️</div>
+          <span className="brand-name">Text<span>Guard</span> AI</span>
         </Link>
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNav"
-        >
-          <span className="navbar-toggler-icon"></span>
+
+        <ul className={`nav-links ${open ? 'open' : ''}`}>
+          {links.map(link => (
+            <li key={link.to}>
+              <Link
+                to={link.to}
+                className={location.pathname === link.to ? 'active' : ''}
+                onClick={() => setOpen(false)}
+              >
+                {link.label}
+              </Link>
+            </li>
+          ))}
+          <li>
+            <span className="nav-badge">AI Powered</span>
+          </li>
+        </ul>
+
+        <button className="navbar-toggler" onClick={() => setOpen(!open)}>
+          {open ? '✕' : '☰'}
         </button>
-        <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav ms-auto">
-            <li className="nav-item">
-              <Link
-                className={`nav-link ${location.pathname === '/' ? 'active' : ''}`}
-                to="/"
-              >
-                Home
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link
-                className={`nav-link ${location.pathname === '/dashboard' ? 'active' : ''}`}
-                to="/dashboard"
-              >
-                Dashboard
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link
-                className={`nav-link ${location.pathname === '/threats' ? 'active' : ''}`}
-                to="/threats"
-              >
-                Threats
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link
-                className={`nav-link ${location.pathname === '/about' ? 'active' : ''}`}
-                to="/about"
-              >
-                About
-              </Link>
-            </li>
-          </ul>
-        </div>
       </div>
     </nav>
   );
