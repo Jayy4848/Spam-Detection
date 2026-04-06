@@ -26,7 +26,7 @@ class SMSLog(models.Model):
     is_phishing = models.BooleanField(default=False)
     phishing_score = models.FloatField(default=0.0)
     risk_level = models.CharField(max_length=20, choices=RISK_LEVEL_CHOICES, default='safe')
-    message_hash = models.CharField(max_length=64, unique=True)
+    message_hash = models.CharField(max_length=64, db_index=True)  # Removed unique constraint
     timestamp = models.DateTimeField(default=timezone.now)
     language = models.CharField(max_length=20, default='en')
     

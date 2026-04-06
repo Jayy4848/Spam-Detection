@@ -62,10 +62,10 @@ DATABASES = {
     }
 }
 
-# Redis Cache Configuration
+# Cache Configuration
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocalMemoryCache',
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
         'LOCATION': 'sms-security-cache',
         'OPTIONS': {
             'MAX_ENTRIES': 10000,
@@ -73,7 +73,7 @@ CACHES = {
         }
     },
     'predictions': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocalMemoryCache',
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
         'LOCATION': 'predictions-cache',
         'TIMEOUT': 3600,  # 1 hour
     }
