@@ -1,0 +1,15 @@
+# Files to ignore during Heroku deployment
+*.pyc
+__pycache__/
+*.log
+.env
+.venv
+venv/
+*.sqlite3
+.git/
+.gitignore
+*.md
+docs/
+tests/
+.vscode/
+.idea/

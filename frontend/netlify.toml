@@ -1,0 +1,40 @@
+# Netlify Configuration for SMS Security Assistant Frontend
+
+[build]
+  # Build command
+  command = "npm run build"
+  
+  # Directory with the static files
+  publish = "build"
+  
+  # Environment variables
+  [build.environment]
+    NODE_VERSION = "18"
+    REACT_APP_API_URL = "https://your-backend-url.com/api"
+
+# Redirect rules for React Router
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Headers for security
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+# Cache static assets
+[[headers]]
+  for = "/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Cache service worker
+[[headers]]
+  for = "/service-worker.js"
+  [headers.values]
+    Cache-Control = "no-cache"
