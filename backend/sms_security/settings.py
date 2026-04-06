@@ -24,7 +24,8 @@ _allowed = os.getenv('ALLOWED_HOSTS', '')
 if _allowed:
     ALLOWED_HOSTS = [h.strip() for h in _allowed.split(',') if h.strip()]
 elif DEBUG:
-    ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0', '192.168.0.103']
+    # Accept localhost + any local network IP automatically
+    ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0', '*']
 else:
     raise RuntimeError("ALLOWED_HOSTS must be set in production")
 
@@ -125,16 +126,31 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # ─── CORS ──────────────────────────────────────────────────────────────────────
 # Never allow all origins — always use explicit whitelist
 CORS_ALLOW_ALL_ORIGINS = False
-CORS_ALLOWED_ORIGINS = [
-    o.strip() for o in
-    os.getenv('CORS_ALLOWED_ORIGINS', 'http://localhost:3000,http://192.168.0.103:3000').split(',')
-    if o.strip()
-]
-CORS_ALLOW_CREDENTIALS = False  # Only enable if you add session auth
+
+# Build allowed origins list
+_cors_env = os.getenv('CORS_ALLOWED_ORIGINS', '')
+_cors_origins = [o.strip() for o in _cors_env.split(',') if o.strip()]
+
+# Always allow localhost in development
+if DEBUG:
+    _cors_origins += [
+        'http://localhost:3000',
+        'http://127.0.0.1:3000',
+    ]
+    # Also allow any local network IP (192.168.x.x, 10.x.x.x, 172.16-31.x.x)
+    # This lets phones on the same WiFi access the app without config changes
+    CORS_ALLOWED_ORIGIN_REGEXES = [
+        r'^http://192\.168\.\d{1,3}\.\d{1,3}:3000$',
+        r'^http://10\.\d{1,3}\.\d{1,3}\.\d{1,3}:3000$',
+        r'^http://172\.(1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3}:3000$',
+    ]
+
+CORS_ALLOWED_ORIGINS = list(set(_cors_origins))
+CORS_ALLOW_CREDENTIALS = False
 CORS_ALLOW_METHODS = ['GET', 'POST', 'OPTIONS']
 CORS_ALLOW_HEADERS = [
     'accept', 'accept-encoding', 'content-type',
-    'origin', 'x-requested-with', 'x-api-key',
+    'origin', 'x-requested-with', 'x-api-key', 'x-request-id',
 ]
 
 # ─── SESSION & COOKIE SECURITY ─────────────────────────────────────────────────

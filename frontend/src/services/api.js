@@ -1,10 +1,39 @@
 import axios from 'axios';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
+/**
+ * Auto-detect the correct backend URL based on where the app is being accessed from.
+ *
+ * - If accessed via localhost → use localhost:8000
+ * - If accessed via a network IP (phone on same WiFi) → use that same IP:8000
+ * - If REACT_APP_API_URL is explicitly set → use that (production override)
+ */
+function resolveApiUrl() {
+  // Explicit override always wins (production deployments)
+  if (process.env.REACT_APP_API_URL) {
+    return process.env.REACT_APP_API_URL;
+  }
 
-// Warn if using HTTP in production
+  const hostname = window.location.hostname;
+
+  // If running on localhost, backend is also on localhost
+  if (hostname === 'localhost' || hostname === '127.0.0.1') {
+    return 'http://localhost:8000/api';
+  }
+
+  // If accessed via a network IP (e.g. phone on same WiFi hitting 192.168.x.x:3000)
+  // → backend is on the same machine, same IP, port 8000
+  if (/^\d{1,3}(\.\d{1,3}){3}$/.test(hostname)) {
+    return `http://${hostname}:8000/api`;
+  }
+
+  // Fallback
+  return 'http://localhost:8000/api';
+}
+
+const API_URL = resolveApiUrl();
+
 if (process.env.NODE_ENV === 'production' && API_URL.startsWith('http://')) {
-  console.warn('[Security] API URL is using HTTP in production. Use HTTPS.');
+  console.warn('[Security] API is using HTTP in production. Switch to HTTPS.');
 }
 
 const api = axios.create({
