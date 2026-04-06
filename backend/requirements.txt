@@ -1,0 +1,36 @@
+# Core Framework
+Django==4.2.7
+djangorestframework==3.14.0
+django-cors-headers==4.3.1
+django-redis==5.4.0
+celery==5.3.4
+redis==5.0.1
+
+# Machine Learning & NLP
+scikit-learn==1.3.2
+pandas==2.1.3
+numpy==1.26.2
+nltk==3.8.1
+transformers==4.35.2
+torch==2.1.1
+sentence-transformers==2.2.2
+xgboost==2.0.2
+lightgbm==4.1.0
+
+# Feature Engineering & Processing
+textblob==0.17.1
+spacy==3.7.2
+phonenumbers==8.13.26
+tldextract==5.1.1
+
+# Model Management & Monitoring
+mlflow==2.9.2
+joblib==1.3.2
+
+# Performance & Caching
+python-dotenv==1.0.0
+psutil==5.9.6
+
+# Utilities
+python-dateutil==2.8.2
+pytz==2023.3

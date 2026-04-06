@@ -1,0 +1,76 @@
+message,category
+"WINNER!! You have won a $1000 prize! Click here to claim now!",spam
+"Congratulations! You've been selected for a free iPhone. Call now!",spam
+"URGENT: Your account will be suspended. Click link immediately.",spam
+"You won the lottery! Claim your prize before it expires!",spam
+"Free gift waiting for you! Limited time offer, act now!",spam
+"Click this link to verify your account or it will be locked",spam
+"You have been selected as a lucky winner. Call 1800-XXX-XXXX",spam
+"Congratulations! You won 10 lakh rupees. Send your details now",spam
+"URGENT ACTION REQUIRED: Update your KYC details immediately",spam
+"Your account has been compromised. Click here to secure it",spam
+"50% off on all items this weekend! Shop now at our store.",promotion
+"Exclusive deal: Buy 1 Get 1 free. Visit our website today.",promotion
+"Flash sale! Up to 70% discount on electronics. Don't miss out!",promotion
+"Special offer for you: Get 20% cashback on your next purchase.",promotion
+"New collection launched! Check out amazing deals on fashion.",promotion
+"Limited time offer: Flat 40% off on all products. Shop now!",promotion
+"Mega sale starts today! Upto 80% discount on selected items.",promotion
+"Get extra 15% off on your first order. Use code: FIRST15",promotion
+"Weekend special: Buy 2 Get 1 free on all categories",promotion
+"Exclusive discount for you! Save big on your favorite brands",promotion
+"Your OTP is 123456. Valid for 10 minutes. Do not share.",otp
+"Verification code: 789012. Use this to complete your login.",otp
+"Your security code is 456789. Enter this to verify your account.",otp
+"OTP for transaction: 234567. This code expires in 5 minutes.",otp
+"Authentication code: 890123. Required to access your account.",otp
+"Your one-time password is 567890. Valid for 15 minutes.",otp
+"Verification code 345678 for your login attempt. Do not share.",otp
+"Your OTP for payment is 901234. Enter within 10 minutes.",otp
+"Security code: 678901. Use this to complete verification.",otp
+"Your authentication code is 112233. Valid for 5 minutes only.",otp
+"Your bank account has been debited Rs. 5000. Balance: Rs. 15000.",important
+"Payment of Rs. 2500 received in your account. Thank you.",important
+"Alert: Your credit card bill of Rs. 8000 is due on 15th.",important
+"Transaction alert: Rs. 1200 spent at Amazon. Available balance: Rs. 25000.",important
+"Your monthly statement is ready. Login to view details.",important
+"Important: Your insurance premium is due on 20th. Pay now to avoid lapse.",important
+"Reminder: Your loan EMI of Rs. 10000 is due tomorrow.",important
+"Alert: Unusual activity detected in your account. Contact us immediately.",important
+"Your flight booking is confirmed. PNR: ABC123. Check-in opens 24hrs before.",important
+"Appointment reminder: Doctor visit scheduled for tomorrow at 10 AM.",important
+"Hi! How are you? Let's meet for coffee tomorrow.",personal
+"Thanks for your help yesterday. Really appreciate it!",personal
+"Can you call me when you're free? Need to discuss something.",personal
+"Happy birthday! Hope you have a wonderful day!",personal
+"Miss you! When are you coming back to town?",personal
+"Hey! Are you coming to the party tonight?",personal
+"Thanks for the gift! It was really thoughtful of you.",personal
+"Let me know when you reach home safely.",personal
+"Good morning! Have a great day ahead!",personal
+"See you at the meeting tomorrow. Take care!",personal
+"Aapka account band ho jayega. Turant KYC update kare.",spam
+"Badhai ho! Aapne lottery jeet li hai. Abhi claim kare.",spam
+"Free recharge mil raha hai. Is link par click kare.",spam
+"Aapko 50000 rupees ka inaam mila hai. Details bheje.",spam
+"Urgent: Aapka bank account suspend hone wala hai.",spam
+"Diwali dhamaka offer! 70% discount on all products.",promotion
+"Aaj hi kharide aur paye extra cashback. Limited time offer.",promotion
+"Naya collection launch hua hai. Dekhne ke liye visit kare.",promotion
+"Weekend sale: Buy 1 Get 1 free on fashion items.",promotion
+"Special discount sirf aapke liye. Shop now and save big!",promotion
+"Aapka OTP hai 445566. 10 minute ke liye valid hai.",otp
+"Verification code: 778899. Login complete karne ke liye use kare.",otp
+"Aapka security code 998877 hai. Share mat kare.",otp
+"Transaction ke liye OTP: 556677. 5 minute me expire hoga.",otp
+"Authentication code 334455 hai. Account access ke liye jaruri.",otp
+"Aapke account se Rs. 3000 debit hua. Balance: Rs. 12000.",important
+"Payment received: Rs. 5000. Thank you for the transaction.",important
+"Bill payment reminder: Rs. 2500 due on 25th. Pay now.",important
+"Transaction alert: Rs. 800 spent at grocery store.",important
+"Aapka monthly statement ready hai. Login karke dekhe.",important
+"Kaise ho? Kal milte hai coffee ke liye.",personal
+"Thanks yaar! Bahut help ki tumne.",personal
+"Free ho to call karna. Baat karni hai.",personal
+"Happy birthday! Enjoy your special day!",personal
+"Miss you! Kab aa rahe ho wapas?",personal
