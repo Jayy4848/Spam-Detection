@@ -5,11 +5,16 @@ from django.db.models import Count, Q, Avg
 from django.utils import timezone
 from datetime import timedelta, datetime
 import hashlib
+import hmac
 
 from .models import SMSLog, UserFeedback, ThreatPattern, ModelPerformance, SenderProfile, AnalyticsSnapshot
 from .serializers import (
     SMSPredictionSerializer, SMSResultSerializer,
     FeedbackSerializer, SMSLogSerializer
+)
+from .security import (
+    sanitize_message, sanitize_language,
+    predict_limiter, global_limiter, audit_log
 )
 from ml_models.classifier import SMSClassifier
 from ml_models.phishing_detector import PhishingDetector
@@ -18,6 +23,9 @@ from ml_models.advanced_analyzer import AdvancedAnalyzer
 from ml_models.pattern_learner import PatternLearner, AnomalyDetector, TemporalAnalyzer
 from ml_models.ensemble_model import EnsembleClassifier, AdaptiveLearner, ConfidenceCalibrator
 from ml_models.deep_learning import NeuralFeatureExtractor, TransferLearningSimulator, AttentionMechanism
+
+import logging
+logger = logging.getLogger('api')
 
 
 class PredictView(APIView):
@@ -42,16 +50,46 @@ class PredictView(APIView):
         self.attention_mechanism = AttentionMechanism()
     
     def post(self, request):
+        # ── Rate limiting ──────────────────────────────────────────────────────
+        allowed, rl_headers = predict_limiter.is_allowed(
+            predict_limiter.get_identifier(request)
+        )
+        if not allowed:
+            resp = Response(
+                {'error': 'Too many requests. Please wait before trying again.'},
+                status=status.HTTP_429_TOO_MANY_REQUESTS
+            )
+            for k, v in rl_headers.items():
+                resp[k] = v
+            return resp
+
+        # ── Input validation ───────────────────────────────────────────────────
         serializer = SMSPredictionSerializer(data=request.data)
-        
         if not serializer.is_valid():
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {'error': 'Invalid input'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        raw_message = serializer.validated_data['message']
+        language    = sanitize_language(serializer.validated_data.get('language', 'en'))
+
+        # Sanitize message text
+        try:
+            message, warnings = sanitize_message(raw_message)
+        except ValueError as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Audit log the request (no message content — privacy)
+        audit_log('predict_request', request, {
+            'msg_length': len(message),
+            'language': language,
+            'warnings': warnings,
+        })
         
-        message = serializer.validated_data['message']
-        language = serializer.validated_data.get('language', 'en')
-        
-        # Generate hash for privacy
-        message_hash = hashlib.sha256(message.encode()).hexdigest()
+        # Generate salted hash for privacy (never store raw message)
+        salt = hashlib.sha256(b'textguard-salt-v1').hexdigest()[:16]
+        message_hash = hashlib.sha256(f"{salt}:{message}".encode()).hexdigest()
         
         # Classify message
         classification_result = self.classifier.predict(message, language)

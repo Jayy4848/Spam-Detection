@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { predictSMS } from '../services/api';
 import ResultCard from './ResultCard';
+import LiveMonitor from './LiveMonitor';
 
 const SAMPLES = {
   spam: "WINNER!! You've been selected for a FREE iPhone 15! Click http://bit.ly/claim-now to claim your prize before it expires. Act NOW!",
@@ -15,8 +16,8 @@ const FEATURES = [
   { icon: '🎣', title: 'Phishing Guard', desc: 'Detects phishing links and fraud attempts' },
   { icon: '🧠', title: 'Explainable AI', desc: 'Shows exactly why a message was flagged' },
   { icon: '📊', title: 'Risk Scoring', desc: 'Quantified risk score from 0–100' },
-  { icon: '🌐', title: 'Multi-language', desc: 'Supports English, Hindi & Marathi' },
-  { icon: '⚡', title: 'Real-time', desc: 'Instant analysis in under 100ms' },
+  { icon: '📋', title: 'Clipboard Detect', desc: 'Auto-detects SMS copied to clipboard' },
+  { icon: '📱', title: 'Live Monitor', desc: 'Simulates real-time phone SMS detection' },
 ];
 
 export default function Home() {
@@ -25,6 +26,33 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
+  const [clipboardToast, setClipboardToast] = useState('');
+  const [activeTab, setActiveTab] = useState('analyzer'); // 'analyzer' | 'monitor'
+  const textareaRef = useRef(null);
+
+  // Clipboard auto-detection on focus
+  const handleTextareaFocus = async () => {
+    if (message.trim()) return; // don't overwrite existing text
+    try {
+      const text = await navigator.clipboard.readText();
+      if (text && text.trim().length > 10 && text.trim().length < 1000) {
+        setMessage(text.trim());
+        setClipboardToast('📋 SMS detected from clipboard — ready to analyze!');
+        setTimeout(() => setClipboardToast(''), 4000);
+      }
+    } catch {
+      // Clipboard permission denied — silent fail, user can still paste manually
+    }
+  };
+
+  // Also detect paste event
+  const handlePaste = (e) => {
+    const pasted = e.clipboardData?.getData('text');
+    if (pasted && pasted.trim().length > 10) {
+      setClipboardToast('📋 SMS pasted — click Analyze to check it!');
+      setTimeout(() => setClipboardToast(''), 3000);
+    }
+  };
 
   const handleAnalyze = async () => {
     if (!message.trim()) return;
@@ -78,84 +106,117 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Analyzer */}
-      <div className="analyzer-card">
-        <div className="analyzer-card-header">
-          <h2>Analyze SMS Message</h2>
-          <span className="char-count">{message.length} / 1000</span>
-        </div>
-
-        <textarea
-          className="sms-textarea"
-          placeholder="Paste your SMS message here... (Ctrl+Enter to analyze)"
-          value={message}
-          onChange={e => setMessage(e.target.value)}
-          onKeyDown={handleKeyDown}
-          maxLength={1000}
-        />
-
-        <div className="sample-section">
-          <div className="sample-label">Try a sample</div>
-          <div className="sample-chips">
-            {Object.entries(SAMPLES).map(([type, text]) => (
-              <button
-                key={type}
-                className={`chip chip-${type}`}
-                onClick={() => { setMessage(text); setResult(null); setError(''); }}
-              >
-                {type.charAt(0).toUpperCase() + type.slice(1)}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className="lang-section">
-          <span className="lang-label">Language:</span>
-          <div className="lang-options">
-            {[['en', 'English'], ['hi', 'Hindi'], ['mr', 'Marathi']].map(([val, label]) => (
-              <button
-                key={val}
-                className={`lang-btn ${language === val ? 'active' : ''}`}
-                onClick={() => setLanguage(val)}
-              >
-                {label}
-              </button>
-            ))}
-          </div>
-        </div>
-
+      {/* Tab switcher */}
+      <div className="tab-switcher">
         <button
-          className="btn-analyze"
-          onClick={handleAnalyze}
-          disabled={loading || !message.trim()}
+          className={`tab-btn ${activeTab === 'analyzer' ? 'active' : ''}`}
+          onClick={() => setActiveTab('analyzer')}
         >
-          {loading ? (
-            <>
-              <div className="pulse-dot" />
-              <div className="pulse-dot" />
-              <div className="pulse-dot" />
-              Analyzing...
-            </>
-          ) : (
-            <> 🔍 Analyze Message</>
-          )}
+          🔍 SMS Analyzer
         </button>
-
-        {error && (
-          <div className="error-alert">⚠️ {error}</div>
-        )}
-
-        <div className="privacy-bar">
-          🔒 Messages are hashed and never stored permanently · Privacy-first design
-        </div>
+        <button
+          className={`tab-btn ${activeTab === 'monitor' ? 'active' : ''}`}
+          onClick={() => setActiveTab('monitor')}
+        >
+          📱 Live Monitor
+          <span className="tab-new-badge">NEW</span>
+        </button>
       </div>
 
-      {/* Result */}
-      {result && !loading && (
-        <div className="result-wrapper">
-          <ResultCard result={result} message={message} />
-        </div>
+      {/* Clipboard toast */}
+      {clipboardToast && (
+        <div className="clipboard-toast">{clipboardToast}</div>
       )}
+
+      {/* Analyzer Tab */}
+      {activeTab === 'analyzer' && (
+        <>
+          <div className="analyzer-card">
+            <div className="analyzer-card-header">
+              <h2>Analyze SMS Message</h2>
+              <span className="char-count">{message.length} / 1000</span>
+            </div>
+
+            <div className="clipboard-hint">
+              📋 Copy an SMS from your phone, then click the box below — it will auto-detect it
+            </div>
+
+            <textarea
+              ref={textareaRef}
+              className="sms-textarea"
+              placeholder="Tap to auto-detect from clipboard, or paste your SMS here... (Ctrl+Enter to analyze)"
+              value={message}
+              onChange={e => setMessage(e.target.value)}
+              onFocus={handleTextareaFocus}
+              onPaste={handlePaste}
+              onKeyDown={handleKeyDown}
+              maxLength={1000}
+            />
+
+            <div className="sample-section">
+              <div className="sample-label">Try a sample</div>
+              <div className="sample-chips">
+                {Object.entries(SAMPLES).map(([type, text]) => (
+                  <button
+                    key={type}
+                    className={`chip chip-${type}`}
+                    onClick={() => { setMessage(text); setResult(null); setError(''); }}
+                  >
+                    {type.charAt(0).toUpperCase() + type.slice(1)}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="lang-section">
+              <span className="lang-label">Language:</span>
+              <div className="lang-options">
+                {[['en', 'English'], ['hi', 'Hindi'], ['mr', 'Marathi']].map(([val, label]) => (
+                  <button
+                    key={val}
+                    className={`lang-btn ${language === val ? 'active' : ''}`}
+                    onClick={() => setLanguage(val)}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <button
+              className="btn-analyze"
+              onClick={handleAnalyze}
+              disabled={loading || !message.trim()}
+            >
+              {loading ? (
+                <>
+                  <div className="pulse-dot" />
+                  <div className="pulse-dot" />
+                  <div className="pulse-dot" />
+                  Analyzing...
+                </>
+              ) : (
+                <> 🔍 Analyze Message</>
+              )}
+            </button>
+
+            {error && <div className="error-alert">⚠️ {error}</div>}
+
+            <div className="privacy-bar">
+              🔒 Messages are hashed and never stored permanently · Privacy-first design
+            </div>
+          </div>
+
+          {result && !loading && (
+            <div className="result-wrapper">
+              <ResultCard result={result} message={message} />
+            </div>
+          )}
+        </>
+      )}
+
+      {/* Live Monitor Tab */}
+      {activeTab === 'monitor' && <LiveMonitor />}
 
       {/* Features */}
       <div className="features-strip">
