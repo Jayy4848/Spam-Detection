@@ -44,9 +44,10 @@ INSTALLED_APPS = [
 
 # ─── MIDDLEWARE (order matters) ─────────────────────────────────────────────────
 MIDDLEWARE = [
-    'api.security.SecurityHeadersMiddleware',        # Security headers first
-    'api.security.BruteForceProtectionMiddleware',   # Block bad IPs
+    'api.security.SecurityHeadersMiddleware',
+    'api.security.BruteForceProtectionMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -120,6 +121,9 @@ STATIC_URL  = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_URL   = 'media/'
 MEDIA_ROOT  = BASE_DIR / 'media'
+
+# WhiteNoise — serve static files in production without a CDN
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
