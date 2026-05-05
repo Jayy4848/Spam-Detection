@@ -93,7 +93,13 @@ api.interceptors.response.use(
       return Promise.reject({ error: 'Request timed out. Check your connection.' });
     }
 
-    return Promise.reject({ error: 'Cannot reach server. Is the backend running?' });
+    // Network error — backend not reachable
+    const isNetlify = window.location.hostname.includes('netlify.app');
+    if (isNetlify) {
+      return Promise.reject({ error: 'Backend server is offline. This demo requires the backend to be deployed. Run locally with npm run dev.' });
+    }
+
+    return Promise.reject({ error: 'Cannot reach server. Make sure the backend is running on port 8000.' });
   }
 );
 
