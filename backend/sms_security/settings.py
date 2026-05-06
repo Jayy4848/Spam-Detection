@@ -7,17 +7,20 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ─── SECRET KEY ────────────────────────────────────────────────────────────────
 # NEVER use the default in production. Generate with:
 #   python -c "import secrets; print(secrets.token_urlsafe(64))"
-_secret = os.getenv('DJANGO_SECRET_KEY')
+_secret = os.getenv('SECRET_KEY') or os.getenv('DJANGO_SECRET_KEY')
 if not _secret:
-    if os.getenv('DJANGO_ENV') == 'production':
-        raise RuntimeError("DJANGO_SECRET_KEY environment variable must be set in production")
+    # Check if we're in production (DATABASE_URL is set or DEBUG is explicitly False)
+    _is_production = os.getenv('DATABASE_URL') or os.getenv('DEBUG') == 'False'
+    if _is_production:
+        raise RuntimeError("SECRET_KEY environment variable must be set in production")
     # Development only — generate a fresh key each restart (sessions won't persist)
     _secret = secrets.token_urlsafe(64)
 SECRET_KEY = _secret
 
 # ─── ENVIRONMENT ───────────────────────────────────────────────────────────────
-DJANGO_ENV = os.getenv('DJANGO_ENV', 'development')
-DEBUG      = DJANGO_ENV != 'production'
+# Auto-detect production mode based on DATABASE_URL or explicit DEBUG setting
+_debug_env = os.getenv('DEBUG', 'True')
+DEBUG = _debug_env.lower() in ('true', '1', 'yes') and not os.getenv('DATABASE_URL')
 
 # ─── HOSTS ─────────────────────────────────────────────────────────────────────
 _allowed = os.getenv('ALLOWED_HOSTS', '')
@@ -80,15 +83,30 @@ TEMPLATES = [
 WSGI_APPLICATION = 'sms_security.wsgi.application'
 
 # ─── DATABASE ──────────────────────────────────────────────────────────────────
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-        'OPTIONS': {
-            'timeout': 20,
-        },
+# Use PostgreSQL in production, SQLite in development
+import dj_database_url
+
+_database_url = os.getenv('DATABASE_URL')
+if _database_url:
+    # Production: Use PostgreSQL from DATABASE_URL
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=_database_url,
+            conn_max_age=600,
+            conn_health_checks=True,
+        )
     }
-}
+else:
+    # Development: Use SQLite
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+            'OPTIONS': {
+                'timeout': 20,
+            },
+        }
+    }
 
 # ─── CACHE ─────────────────────────────────────────────────────────────────────
 CACHES = {
