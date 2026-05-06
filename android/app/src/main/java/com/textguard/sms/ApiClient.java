@@ -52,7 +52,10 @@ public class ApiClient {
             prefs = context.getSharedPreferences("textguard_prefs", Context.MODE_PRIVATE);
         }
 
-        this.baseUrl = prefs.getString("api_url", "http://192.168.0.103:8000/api");
+        // Default API URL - Change this to your computer's IP address
+        // Find your IP: Run "ipconfig" in terminal and look for IPv4 Address
+        // Example: http://192.168.1.5:8000/api
+        this.baseUrl = prefs.getString("api_url", "http://192.168.1.5:8000/api");
 
         // Build OkHttpClient with security settings
         OkHttpClient.Builder builder = new OkHttpClient.Builder()

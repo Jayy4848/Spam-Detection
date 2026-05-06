@@ -227,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void showSettingsDialog() {
         SharedPreferences prefs = getSharedPreferences("textguard_prefs", MODE_PRIVATE);
-        String currentUrl = prefs.getString("api_url", "http://192.168.0.103:8000/api");
+        String currentUrl = prefs.getString("api_url", "http://192.168.1.5:8000/api");
 
         android.widget.EditText input = new android.widget.EditText(this);
         input.setText(currentUrl);
@@ -235,7 +235,7 @@ public class MainActivity extends AppCompatActivity {
 
         new AlertDialog.Builder(this)
             .setTitle("⚙️ Server Settings")
-            .setMessage("TextGuard backend API URL:\n(e.g. http://192.168.0.103:8000/api)")
+            .setMessage("TextGuard backend API URL:\n\nSame WiFi: http://YOUR-PC-IP:8000/api\nCloud: https://your-backend.onrender.com/api")
             .setView(input)
             .setPositiveButton("Save", (dialog, which) -> {
                 String newUrl = input.getText().toString().trim();

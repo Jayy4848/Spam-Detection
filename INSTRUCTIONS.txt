@@ -1,0 +1,68 @@
+========================================
+   TEXTGUARD - SIMPLE INSTRUCTIONS
+========================================
+
+AUTOMATIC SETUP (EASIEST):
+========================================
+
+1. Double-click: START_HERE.bat
+
+2. Wait for it to complete (3-5 minutes)
+
+3. Transfer the APK to your phone:
+   Location: android\app\build\outputs\apk\debug\app-debug.apk
+   
+   How to transfer:
+   - USB cable: Copy to phone's Downloads folder
+   - OR Google Drive: Upload and download on phone
+   - OR Email: Send to yourself
+
+4. Install APK on phone:
+   - Enable "Unknown Sources" in Settings
+   - Tap the APK file
+   - Tap "Install"
+
+5. Open TextGuard app on phone:
+   - Grant all permissions (SMS, Notifications)
+   - Turn ON "Auto Monitor SMS"
+   - Turn ON "Notification Analysis"
+
+6. Done! Send yourself a test SMS to verify.
+
+
+THAT'S IT!
+========================================
+
+The script does everything automatically:
+✓ Finds your IP address
+✓ Configures the Android app
+✓ Builds the APK
+✓ Starts the backend server
+
+You just need to:
+✓ Transfer APK to phone
+✓ Install it
+✓ Grant permissions
+
+
+TROUBLESHOOTING:
+========================================
+
+If script fails:
+- Make sure you're in the project root folder
+- Check that Java is installed (for Android build)
+- Check that Python virtual environment exists
+
+If app can't connect:
+- Make sure backend server is running (keep window open)
+- Check both devices are on SAME WiFi
+- Try restarting the backend server
+
+
+NEED HELP?
+========================================
+
+Check these files:
+- QUICK_CHECKLIST.txt - Step by step checklist
+- WIFI_SETUP_GUIDE.txt - Detailed manual guide
+- ANDROID_SETUP.txt - Android specific help

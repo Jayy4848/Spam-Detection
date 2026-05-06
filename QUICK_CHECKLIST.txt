@@ -1,0 +1,69 @@
+========================================
+QUICK SETUP CHECKLIST
+========================================
+
+Follow these steps in order:
+
+□ STEP 1: Find Your IP Address
+  Command: ipconfig
+  Look for: IPv4 Address (e.g., 192.168.1.5)
+  Write it down: ___________________
+
+□ STEP 2: Build Android APK
+  Command: cd android
+  Command: gradlew assembleDebug
+  Location: android\app\build\outputs\apk\debug\app-debug.apk
+
+□ STEP 3: Transfer APK to Phone
+  Method: USB / Google Drive / Email
+  
+□ STEP 4: Install APK on Phone
+  Enable: Unknown Sources
+  Install: app-debug.apk
+
+□ STEP 5: Start Backend Server
+  Command: cd backend
+  Command: venv\Scripts\activate
+  Command: python manage.py runserver 0.0.0.0:8000
+  Keep terminal open!
+
+□ STEP 6: Configure App
+  Open: TextGuard app
+  Tap: Settings (⚙️)
+  Enter: http://YOUR-IP:8000/api
+  Example: http://192.168.1.5:8000/api
+
+□ STEP 7: Grant Permissions
+  Allow: SMS permissions
+  Allow: Notification access
+  Disable: Battery optimization
+
+□ STEP 8: Enable Monitoring
+  Turn ON: Auto Monitor SMS
+  Turn ON: Notification Analysis
+
+□ STEP 9: Test
+  Send test SMS to your phone
+  Check: App detects it automatically
+  Check: Notification appears
+
+✓ DONE! All features working!
+
+========================================
+IMPORTANT REMINDERS
+========================================
+
+✓ Both phone and computer must be on SAME WiFi
+✓ Backend server must be running
+✓ Keep the terminal window open
+✓ If IP changes, update in app settings
+
+========================================
+YOUR CONFIGURATION
+========================================
+
+Computer IP: ___________________
+Backend URL: http://___________:8000/api
+APK Location: android\app\build\outputs\apk\debug\app-debug.apk
+
+========================================

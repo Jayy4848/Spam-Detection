@@ -84,18 +84,29 @@ WSGI_APPLICATION = 'sms_security.wsgi.application'
 
 # ─── DATABASE ──────────────────────────────────────────────────────────────────
 # Use PostgreSQL in production, SQLite in development
-import dj_database_url
-
 _database_url = os.getenv('DATABASE_URL')
 if _database_url:
     # Production: Use PostgreSQL from DATABASE_URL
-    DATABASES = {
-        'default': dj_database_url.config(
-            default=_database_url,
-            conn_max_age=600,
-            conn_health_checks=True,
-        )
-    }
+    try:
+        import dj_database_url
+        DATABASES = {
+            'default': dj_database_url.config(
+                default=_database_url,
+                conn_max_age=600,
+                conn_health_checks=True,
+            )
+        }
+    except ImportError:
+        # Fallback to SQLite if dj_database_url not installed
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': BASE_DIR / 'db.sqlite3',
+                'OPTIONS': {
+                    'timeout': 20,
+                },
+            }
+        }
 else:
     # Development: Use SQLite
     DATABASES = {

@@ -1,0 +1,259 @@
+========================================
+ANDROID APP SETUP GUIDE
+========================================
+
+STEP 1: BUILD THE APK
+========================================
+
+Option A: Using Android Studio (Recommended)
+---------------------------------------------
+1. Download Android Studio: https://developer.android.com/studio
+2. Install it (takes ~10 minutes)
+3. Open Android Studio
+4. File → Open → Select the "android" folder
+5. Wait for Gradle sync to complete
+6. Build → Build Bundle(s) / APK(s) → Build APK(s)
+7. Wait 2-3 minutes
+8. APK location: android/app/build/outputs/apk/debug/app-debug.apk
+
+Option B: Command Line (Faster)
+--------------------------------
+1. Open terminal in project root
+2. Run:
+   cd android
+   gradlew assembleDebug
+3. APK location: app/build/outputs/apk/debug/app-debug.apk
+
+
+STEP 2: INSTALL ON PHONE
+========================================
+
+1. Transfer APK to phone:
+   - Connect phone via USB
+   - Copy app-debug.apk to phone's Downloads folder
+   
+   OR
+   
+   - Upload to Google Drive
+   - Download on phone
+
+2. Enable installation from unknown sources:
+   - Settings → Security → Unknown Sources → Enable
+   - (Or Settings → Apps → Special Access → Install Unknown Apps)
+
+3. Install:
+   - Open file manager
+   - Go to Downloads
+   - Tap on app-debug.apk
+   - Click "Install"
+
+
+STEP 3: CONFIGURE BACKEND URL
+========================================
+
+The app needs to connect to your backend API.
+
+Option A: Local Backend (Same WiFi)
+------------------------------------
+1. Start backend on computer:
+   cd backend
+   venv\Scripts\activate
+   python manage.py runserver 0.0.0.0:8000
+
+2. Find your computer's IP address:
+   Windows: ipconfig
+   Look for IPv4 Address (e.g., 192.168.1.5)
+
+3. In the app:
+   - Open TextGuard app
+   - Go to Settings
+   - Set API URL: http://192.168.1.5:8000/api
+   - Save
+
+Option B: Cloud Backend (Works Anywhere)
+-----------------------------------------
+1. Deploy backend to Render first
+2. Get your backend URL (e.g., https://your-app.onrender.com)
+3. In the app:
+   - Open TextGuard app
+   - Go to Settings
+   - Set API URL: https://your-app.onrender.com/api
+   - Save
+
+
+STEP 4: GRANT PERMISSIONS
+========================================
+
+The app needs these permissions to work:
+
+1. SMS Permissions:
+   - Read SMS
+   - Receive SMS
+   - Send SMS (optional)
+
+2. Notification Access:
+   - Settings → Apps → TextGuard → Notifications
+   - Enable all notifications
+
+3. Notification Listener (for WhatsApp/Banking apps):
+   - Settings → Apps → Special Access → Notification Access
+   - Enable TextGuard
+
+4. Autostart Permission:
+   - Settings → Apps → TextGuard → Battery
+   - Set to "No restrictions"
+
+
+STEP 5: TEST THE APP
+========================================
+
+1. Open the app
+2. You should see the main screen with:
+   - SMS Feed (empty initially)
+   - Statistics (0 analyzed)
+   - Toggle switches for monitoring
+
+3. Test manual analysis:
+   - Tap "Analyze SMS" button
+   - Enter: "Congratulations! You won $1000. Click here."
+   - Tap "Analyze"
+   - Should show: SPAM with high risk
+
+4. Test automatic monitoring:
+   - Enable "Auto Monitor SMS" toggle
+   - Send yourself a test SMS
+   - App should automatically detect and analyze it
+   - You'll get a notification with the result
+
+
+FEATURES YOU'LL GET
+========================================
+
+✓ Automatic SMS Interception
+  - Every incoming SMS is automatically analyzed
+  - No manual copy-paste needed
+
+✓ Real-time Notifications
+  - Get instant alerts for spam/phishing
+  - Shows risk level (HIGH/MEDIUM/SAFE)
+
+✓ Background Monitoring
+  - Works even when app is closed
+  - Runs in background service
+
+✓ SMS Feed
+  - See all analyzed messages
+  - Tap to see details
+  - Color-coded by risk level
+
+✓ Statistics Dashboard
+  - Total SMS analyzed
+  - Spam detected
+  - Phishing attempts
+  - Risk distribution
+
+✓ WhatsApp/Banking Notifications
+  - Monitors notifications from other apps
+  - Detects phishing in WhatsApp messages
+  - Alerts for suspicious banking notifications
+
+✓ Auto-start on Boot
+  - Automatically starts monitoring when phone boots
+  - No need to open app manually
+
+
+TROUBLESHOOTING
+========================================
+
+Problem: App crashes on startup
+Solution: 
+- Check if backend is running
+- Verify API URL is correct
+- Check app permissions
+
+Problem: SMS not being detected
+Solution:
+- Enable "Auto Monitor SMS" toggle
+- Grant SMS permissions
+- Check if backend is reachable
+
+Problem: "Cannot connect to server"
+Solution:
+- Check backend is running
+- Verify API URL (no trailing slash)
+- Check phone is on same WiFi (for local backend)
+- Check internet connection (for cloud backend)
+
+Problem: Notifications not showing
+Solution:
+- Enable notification permissions
+- Settings → Apps → TextGuard → Notifications → Enable all
+- Check "Do Not Disturb" is off
+
+Problem: App stops working after phone restart
+Solution:
+- Enable autostart permission
+- Settings → Apps → TextGuard → Battery → No restrictions
+- Some phones (Xiaomi, Oppo) have aggressive battery optimization
+
+
+BACKEND DEPLOYMENT (For Cloud Access)
+========================================
+
+If you want the app to work from anywhere (not just same WiFi):
+
+1. Deploy backend to Render:
+   - Go to https://render.com
+   - Create PostgreSQL database
+   - Create Web Service
+   - Set environment variables
+   - Deploy
+
+2. Update app API URL:
+   - Open app → Settings
+   - Set: https://your-backend.onrender.com/api
+
+3. Now app works from anywhere with internet!
+
+
+COMPARISON: WEB APP vs ANDROID APP
+========================================
+
+Feature                    | Web App | Android App
+---------------------------|---------|-------------
+Manual SMS Analysis        | ✓       | ✓
+Dashboard/Statistics       | ✓       | ✓
+Live Monitor              | ✓       | ✓
+Automatic SMS Detection   | ✗       | ✓
+Background Monitoring     | ✗       | ✓
+Push Notifications        | ✗       | ✓
+Works when closed         | ✗       | ✓
+Auto-start on boot        | ✗       | ✓
+WhatsApp monitoring       | ✗       | ✓
+
+
+RECOMMENDATION
+========================================
+
+For FULL FEATURES on mobile:
+→ Use the ANDROID APP
+
+The web app (browser) cannot access SMS automatically due to 
+browser security restrictions. Only the native Android app can 
+intercept SMS messages automatically.
+
+
+NEXT STEPS
+========================================
+
+1. Build the APK (Option A or B above)
+2. Install on your phone
+3. Configure backend URL
+4. Grant permissions
+5. Enable auto-monitoring
+6. Done! All features working!
+
+
+Need help? Check the logs:
+- Android Studio → Logcat
+- Filter by "TextGuard"

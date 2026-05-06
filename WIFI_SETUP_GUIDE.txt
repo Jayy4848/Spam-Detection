@@ -1,0 +1,425 @@
+========================================
+ANDROID APP - SAME WIFI SETUP GUIDE
+========================================
+
+This guide will help you set up the Android app to work on the same WiFi network.
+
+REQUIREMENTS:
+- Your computer and phone must be on the SAME WiFi network
+- Backend server must be running on your computer
+- Phone must have Android 6.0 or higher
+
+
+========================================
+STEP 1: FIND YOUR COMPUTER'S IP ADDRESS
+========================================
+
+Windows:
+--------
+1. Open Command Prompt (cmd)
+2. Type: ipconfig
+3. Look for "IPv4 Address" under your WiFi adapter
+4. It will look like: 192.168.1.5 or 192.168.0.105
+
+Example output:
+   Wireless LAN adapter Wi-Fi:
+      IPv4 Address. . . . . . . . . . . : 192.168.1.5
+      
+WRITE DOWN THIS IP ADDRESS! You'll need it.
+
+
+========================================
+STEP 2: UPDATE ANDROID APP (OPTIONAL)
+========================================
+
+If you want to set a default IP (so you don't have to configure it in the app):
+
+1. Open file: android/app/src/main/java/com/textguard/sms/ApiClient.java
+
+2. Find this line (around line 52):
+   this.baseUrl = prefs.getString("api_url", "http://192.168.1.5:8000/api");
+
+3. Replace 192.168.1.5 with YOUR IP address from Step 1
+
+4. Save the file
+
+Note: You can skip this step and configure the URL in the app settings later.
+
+
+========================================
+STEP 3: BUILD THE ANDROID APK
+========================================
+
+Option A: Using the Script (Easiest)
+-------------------------------------
+1. Double-click: setup_android_wifi.bat
+2. Follow the on-screen instructions
+3. APK will be created automatically
+
+Option B: Manual Build
+-----------------------
+1. Open Command Prompt
+2. Navigate to android folder:
+   cd android
+
+3. Build the APK:
+   gradlew assembleDebug
+
+4. Wait 2-3 minutes for build to complete
+
+5. APK location:
+   android\app\build\outputs\apk\debug\app-debug.apk
+
+
+========================================
+STEP 4: TRANSFER APK TO PHONE
+========================================
+
+Method 1: USB Cable
+-------------------
+1. Connect phone to computer via USB
+2. Enable "File Transfer" mode on phone
+3. Copy app-debug.apk to phone's Downloads folder
+4. Disconnect phone
+
+Method 2: Google Drive
+----------------------
+1. Upload app-debug.apk to Google Drive
+2. Open Google Drive on phone
+3. Download the APK file
+
+Method 3: Email
+---------------
+1. Email the APK to yourself
+2. Open email on phone
+3. Download the attachment
+
+
+========================================
+STEP 5: INSTALL APK ON PHONE
+========================================
+
+1. Enable "Install from Unknown Sources":
+   - Settings → Security → Unknown Sources → Enable
+   - OR Settings → Apps → Special Access → Install Unknown Apps
+   - Select your file manager and enable
+
+2. Open file manager on phone
+
+3. Go to Downloads folder
+
+4. Tap on app-debug.apk
+
+5. Tap "Install"
+
+6. Wait for installation to complete
+
+7. Tap "Open" or find "TextGuard" in your app drawer
+
+
+========================================
+STEP 6: START BACKEND SERVER
+========================================
+
+IMPORTANT: The backend server must be running on your computer!
+
+1. Open Command Prompt
+
+2. Navigate to backend folder:
+   cd backend
+
+3. Activate virtual environment:
+   venv\Scripts\activate
+
+4. Start server on all network interfaces:
+   python manage.py runserver 0.0.0.0:8000
+
+5. You should see:
+   Starting development server at http://0.0.0.0:8000/
+   Quit the server with CTRL-BREAK.
+
+6. KEEP THIS WINDOW OPEN!
+
+Note: The server must be running for the app to work.
+
+
+========================================
+STEP 7: CONFIGURE APP ON PHONE
+========================================
+
+1. Open TextGuard app on your phone
+
+2. Tap the Settings button (⚙️ icon at top)
+
+3. You'll see a dialog: "Server Settings"
+
+4. Enter your backend URL:
+   http://YOUR-IP-ADDRESS:8000/api
+   
+   Example: http://192.168.1.5:8000/api
+   
+   Replace YOUR-IP-ADDRESS with the IP from Step 1
+
+5. Tap "Save"
+
+6. You should see: "✅ Server URL saved"
+
+
+========================================
+STEP 8: GRANT PERMISSIONS
+========================================
+
+The app will ask for permissions. Grant ALL of them:
+
+1. SMS Permissions:
+   - Read SMS
+   - Receive SMS
+   - Send SMS (optional)
+   Tap "Allow"
+
+2. Notification Access:
+   - Settings → Apps → Special Access → Notification Access
+   - Find "TextGuard"
+   - Enable it
+   This allows monitoring WhatsApp/Banking notifications
+
+3. Battery Optimization:
+   - Settings → Apps → TextGuard → Battery
+   - Select "No restrictions"
+   This keeps the app running in background
+
+4. Autostart (on some phones):
+   - Settings → Apps → TextGuard → Autostart
+   - Enable
+   This starts monitoring after phone restart
+
+
+========================================
+STEP 9: ENABLE MONITORING
+========================================
+
+1. In the TextGuard app, you'll see two toggles:
+
+   a) "Auto Monitor SMS"
+      - Turn this ON
+      - App will automatically analyze all incoming SMS
+
+   b) "Notification Analysis"
+      - Turn this ON
+      - App will monitor WhatsApp/Banking notifications
+
+2. You should see:
+   - Status: "🟢 Monitoring Active"
+   - Notification Status: "🟢 Active"
+
+
+========================================
+STEP 10: TEST THE APP
+========================================
+
+Test 1: Manual Analysis
+-----------------------
+1. Tap "Analyze SMS" button (if available)
+2. Enter test message: "Congratulations! You won $1000. Click here."
+3. Tap "Analyze"
+4. Should show: "⚠️ SPAM" with high risk score
+
+Test 2: Automatic Detection
+----------------------------
+1. Send yourself a test SMS from another phone
+2. The app should automatically detect it
+3. You'll get a notification with the analysis result
+4. Check the SMS Feed in the app - the message should appear
+
+Test 3: Backend Connection
+---------------------------
+1. Check if backend is reachable
+2. In the app, try analyzing any message
+3. If it works, connection is successful!
+4. If it fails, check:
+   - Backend server is running
+   - IP address is correct
+   - Both devices on same WiFi
+
+
+========================================
+TROUBLESHOOTING
+========================================
+
+Problem: "Cannot connect to server"
+------------------------------------
+Solution:
+1. Check backend is running on computer
+2. Verify IP address is correct (run ipconfig again)
+3. Make sure phone and computer are on SAME WiFi
+4. Check Windows Firewall:
+   - Control Panel → Windows Defender Firewall
+   - Allow an app through firewall
+   - Add Python (python.exe)
+   - Enable for Private networks
+
+Problem: App crashes on startup
+--------------------------------
+Solution:
+1. Uninstall the app
+2. Rebuild APK: gradlew clean assembleDebug
+3. Reinstall
+
+Problem: SMS not being detected automatically
+----------------------------------------------
+Solution:
+1. Check "Auto Monitor SMS" toggle is ON
+2. Grant SMS permissions (Settings → Apps → TextGuard → Permissions)
+3. Disable battery optimization
+4. Check backend is running
+
+Problem: Notifications not showing
+-----------------------------------
+Solution:
+1. Settings → Apps → TextGuard → Notifications
+2. Enable all notification categories
+3. Make sure "Do Not Disturb" is off
+4. Check notification access is granted
+
+Problem: Different WiFi network
+--------------------------------
+Solution:
+1. Make sure BOTH phone and computer are on the SAME WiFi
+2. Not guest network - use main WiFi
+3. Some routers block device-to-device communication
+   - Check router settings
+   - Enable "AP Isolation" OFF
+
+Problem: IP address changed
+----------------------------
+Solution:
+1. Computer's IP can change after restart
+2. Run ipconfig again to get new IP
+3. Update in app: Settings → Enter new IP → Save
+4. Restart backend server
+
+
+========================================
+FEATURES YOU'LL HAVE
+========================================
+
+✓ Automatic SMS Detection
+  - Every incoming SMS is analyzed automatically
+  - No need to open the app or copy-paste
+
+✓ Real-time Notifications
+  - Get instant alerts for spam/phishing
+  - Shows risk level: HIGH/MEDIUM/SAFE
+
+✓ Background Monitoring
+  - Works even when app is closed
+  - Runs as a background service
+
+✓ SMS Feed
+  - See all analyzed messages
+  - Color-coded by risk level
+  - Tap to see details
+
+✓ Statistics Dashboard
+  - Total SMS analyzed
+  - Threats detected
+  - Safe messages
+  - Risk distribution
+
+✓ WhatsApp/Banking Monitoring
+  - Monitors notifications from other apps
+  - Detects phishing in WhatsApp
+  - Alerts for suspicious banking notifications
+
+✓ Auto-start on Boot
+  - Automatically starts when phone boots
+  - No manual intervention needed
+
+
+========================================
+IMPORTANT NOTES
+========================================
+
+1. Backend Server Must Be Running:
+   - The computer must be ON
+   - Backend server must be running
+   - If you close the server, app won't work
+
+2. Same WiFi Required:
+   - Both devices must be on same WiFi
+   - Won't work on mobile data
+   - Won't work if computer is on Ethernet and phone on WiFi
+     (unless they're on same network)
+
+3. IP Address Can Change:
+   - If computer restarts, IP might change
+   - Check IP again and update in app if needed
+
+4. Firewall:
+   - Windows Firewall might block connections
+   - Allow Python through firewall if needed
+
+5. Battery:
+   - Disable battery optimization for the app
+   - Otherwise, Android might kill the background service
+
+
+========================================
+QUICK REFERENCE
+========================================
+
+Start Backend:
+--------------
+cd backend
+venv\Scripts\activate
+python manage.py runserver 0.0.0.0:8000
+
+Find IP Address:
+----------------
+ipconfig
+
+App Settings:
+-------------
+http://YOUR-IP:8000/api
+Example: http://192.168.1.5:8000/api
+
+Build APK:
+----------
+cd android
+gradlew assembleDebug
+
+APK Location:
+-------------
+android\app\build\outputs\apk\debug\app-debug.apk
+
+
+========================================
+NEXT STEPS
+========================================
+
+Once everything is working:
+
+1. Keep backend running when you want to use the app
+2. App will automatically monitor all SMS
+3. Check the SMS Feed to see analyzed messages
+4. Review statistics in the dashboard
+5. Adjust settings as needed
+
+For permanent access (without keeping computer on):
+- Consider deploying backend to cloud (Render)
+- Then app works from anywhere with internet
+
+
+========================================
+NEED HELP?
+========================================
+
+Check the logs:
+- Backend: Look at the terminal where server is running
+- Android: Use Android Studio → Logcat → Filter "TextGuard"
+
+Common issues are usually:
+- Wrong IP address
+- Backend not running
+- Firewall blocking connection
+- Different WiFi networks
