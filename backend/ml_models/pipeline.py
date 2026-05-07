@@ -300,18 +300,25 @@ class SMSClassificationPipeline:
         best_pipeline = self.trained_pipelines[best_model_key]
         best_metrics = self.evaluation_results[best_model_key]
         
-        # Save pipeline
+        # Save best pipeline
         model_path = self.models_dir / 'best_model.pkl'
         joblib.dump(best_pipeline, model_path)
+        
+        # Save ALL trained models for comparison
+        for model_key, pipeline in self.trained_pipelines.items():
+            model_file = self.models_dir / f'{model_key}_model.pkl'
+            joblib.dump(pipeline, model_file)
+            logger.info(f"Saved model: {model_key}")
         
         # Save label encoder
         encoder_path = self.models_dir / 'label_encoder.pkl'
         joblib.dump(self.label_encoder, encoder_path)
         
-        # Save metadata
+        # Save metadata with ALL models' metrics
         metadata = {
-            'model_key': best_model_key,
-            'metrics': best_metrics,
+            'best_model_key': best_model_key,
+            'best_metrics': best_metrics,
+            'all_models': self.evaluation_results,
             'classes': self.label_encoder.classes_.tolist()
         }
         
@@ -322,6 +329,7 @@ class SMSClassificationPipeline:
         
         logger.info(f"Best model saved: {best_model_key}")
         logger.info(f"Performance: {metric}={best_metrics[metric]:.4f}")
+        logger.info(f"Saved {len(self.trained_pipelines)} models total")
         
         return best_model_key
     

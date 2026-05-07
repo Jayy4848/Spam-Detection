@@ -36,9 +36,17 @@ function Navbar() {
           </li>
         </ul>
 
-        <button className="navbar-toggler" onClick={() => setOpen(!open)}>
-          {open ? '✕' : '☰'}
-        </button>
+        <div className="navbar-right">
+          <div className="user-profile">
+            <div className="user-avatar">
+              <span className="avatar-text">A</span>
+              <div className="avatar-status"></div>
+            </div>
+          </div>
+          <button className="navbar-toggler" onClick={() => setOpen(!open)}>
+            {open ? '✕' : '☰'}
+          </button>
+        </div>
       </div>
     </nav>
   );

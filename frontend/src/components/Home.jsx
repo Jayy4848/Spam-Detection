@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react';
-import { predictSMS } from '../services/api';
+import React, { useState, useRef, useEffect } from 'react';
+import { predictSMS, getModelInfo } from '../services/api';
 import ResultCard from './ResultCard';
 import LiveMonitor from './LiveMonitor';
 
@@ -28,7 +28,16 @@ export default function Home() {
   const [error, setError] = useState('');
   const [clipboardToast, setClipboardToast] = useState('');
   const [activeTab, setActiveTab] = useState('analyzer'); // 'analyzer' | 'monitor'
+  const [modelInfo, setModelInfo] = useState(null);
   const textareaRef = useRef(null);
+  const resultRef = useRef(null);
+
+  // Fetch model info on component mount
+  useEffect(() => {
+    getModelInfo()
+      .then(data => setModelInfo(data))
+      .catch(err => console.error('Failed to load model info:', err));
+  }, []);
 
   // Clipboard auto-detection on focus
   const handleTextareaFocus = async () => {
@@ -62,6 +71,16 @@ export default function Home() {
     try {
       const data = await predictSMS(message, language);
       setResult(data);
+      // Auto-scroll to result after a short delay to ensure DOM is updated
+      setTimeout(() => {
+        if (resultRef.current) {
+          resultRef.current.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'start',
+            inline: 'nearest'
+          });
+        }
+      }, 100);
     } catch (err) {
       setError(err.error || 'Analysis failed. Please check your connection and try again.');
     } finally {
@@ -88,7 +107,7 @@ export default function Home() {
         </p>
         <div className="hero-stats">
           <div className="hero-stat">
-            <div className="hero-stat-num">98.9%</div>
+            <div className="hero-stat-num">{modelInfo ? `${modelInfo.accuracy}%` : '...'}</div>
             <div className="hero-stat-label">Accuracy</div>
           </div>
           <div className="hero-stat">
@@ -96,8 +115,8 @@ export default function Home() {
             <div className="hero-stat-label">Response Time</div>
           </div>
           <div className="hero-stat">
-            <div className="hero-stat-num">5</div>
-            <div className="hero-stat-label">ML Models</div>
+            <div className="hero-stat-num">{modelInfo ? modelInfo.total_classes : '5'}</div>
+            <div className="hero-stat-label">Categories</div>
           </div>
           <div className="hero-stat">
             <div className="hero-stat-num">3</div>
@@ -105,6 +124,25 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Model Info Banner */}
+      {modelInfo && (
+        <div className="model-info-banner">
+          <div className="model-info-icon">🤖</div>
+          <div className="model-info-content">
+            <div className="model-info-title">
+              Powered by <strong>{modelInfo.model_name}</strong>
+            </div>
+            <div className="model-info-metrics">
+              <span>Accuracy: <strong>{modelInfo.accuracy}%</strong></span>
+              <span>•</span>
+              <span>Precision: <strong>{modelInfo.precision}%</strong></span>
+              <span>•</span>
+              <span>F1-Score: <strong>{modelInfo.f1_score}%</strong></span>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Tab switcher */}
       <div className="tab-switcher">
@@ -208,7 +246,7 @@ export default function Home() {
           </div>
 
           {result && !loading && (
-            <div className="result-wrapper">
+            <div className="result-wrapper" ref={resultRef}>
               <ResultCard result={result} message={message} />
             </div>
           )}

@@ -1,0 +1,181 @@
+========================================
+  PHONE ACCESS TROUBLESHOOTING
+========================================
+
+GOOD NEWS: Backend is working! ✓
+ISSUE: Frontend not loading on phone
+
+SOLUTIONS TO TRY:
+========================================
+
+
+SOLUTION 1: Clear Browser Cache
+========================================
+
+On your phone's Chrome:
+
+1. Tap the three dots (⋮) in Chrome
+2. Settings → Privacy and security
+3. Clear browsing data
+4. Select "Cached images and files"
+5. Tap "Clear data"
+6. Try again: http://192.168.0.102:3000
+
+
+SOLUTION 2: Force Refresh
+========================================
+
+On the page that won't load:
+
+1. Pull down to refresh
+2. OR tap the three dots → Reload
+3. OR close Chrome completely and reopen
+
+
+SOLUTION 3: Try Different Browser
+========================================
+
+Install and try:
+- Firefox for Android
+- Microsoft Edge
+- Samsung Internet
+
+URL: http://192.168.0.102:3000
+
+
+SOLUTION 4: Check Exact URL
+========================================
+
+Make sure you're typing EXACTLY:
+
+✓ CORRECT: http://192.168.0.102:3000
+✗ WRONG: https://192.168.0.102:3000 (https)
+✗ WRONG: http://192.168.0.102:3000/ (trailing slash might cause issues)
+✗ WRONG: http://192.168.0.102 (missing :3000)
+
+Type it carefully!
+
+
+SOLUTION 5: Disable Data Saver
+========================================
+
+If you have Data Saver enabled:
+
+1. Chrome → Settings → Lite mode
+2. Turn OFF
+3. Try again
+
+
+SOLUTION 6: Check Chrome Flags
+========================================
+
+1. Open: chrome://flags
+2. Search for "secure"
+3. Make sure "Insecure origins treated as secure" is default
+4. Restart Chrome
+
+
+SOLUTION 7: Use IP in Hosts
+========================================
+
+Sometimes DNS causes issues.
+
+Try typing in Chrome address bar:
+http://192.168.0.102:3000
+
+Then bookmark it for easy access.
+
+
+WHAT YOU SHOULD SEE:
+========================================
+
+When it works, you'll see:
+
+┌─────────────────────────────────────┐
+│  🛡️ TextGuard SMS Security         │
+│                                     │
+│  [Analyze SMS]                      │
+│  [Dashboard]                        │
+│  [Live Monitor]                     │
+│  [About]                            │
+│                                     │
+│  Enter SMS message to analyze...    │
+│  [Text box]                         │
+│  [Analyze SMS button]               │
+└─────────────────────────────────────┘
+
+
+DIAGNOSTIC STEPS:
+========================================
+
+Step 1: Test Backend (Already Working ✓)
+http://192.168.0.102:8000/api/health/
+Shows: {"status": "healthy"}
+
+Step 2: Test Frontend
+http://192.168.0.102:3000
+Should show: TextGuard homepage
+
+Step 3: Check What You See
+- Blank white page? → Clear cache
+- "Site can't be reached"? → Check WiFi
+- Loading forever? → Restart Chrome
+- Error message? → Tell me what it says
+
+
+ALTERNATIVE: USE COMPUTER'S BROWSER
+========================================
+
+While we fix phone access, you can use it on computer:
+
+Open on computer: http://localhost:3000
+
+This definitely works!
+
+
+STILL NOT WORKING?
+========================================
+
+Tell me EXACTLY what you see on phone:
+
+1. Blank white page?
+2. Error message? (what does it say?)
+3. Loading spinner forever?
+4. "Site can't be reached"?
+5. Something else?
+
+Also check:
+- Phone WiFi is ON
+- Connected to same network as computer
+- Not using mobile data
+- Not using VPN
+
+
+QUICK TEST:
+========================================
+
+On your phone, try these URLs in order:
+
+1. http://192.168.0.102:8000/api/health/
+   Should show: {"status": "healthy"} ✓
+
+2. http://192.168.0.102:8000
+   Should show: Django error page or API info
+
+3. http://192.168.0.102:3000
+   Should show: TextGuard app
+
+If #1 works but #3 doesn't:
+→ Clear Chrome cache
+→ Try different browser
+→ Restart phone
+
+
+EXPECTED BEHAVIOR:
+========================================
+
+✓ Backend (port 8000): Working
+✓ Frontend (port 3000): Should work
+
+Both are running on your computer.
+Both should be accessible from phone on same WiFi.

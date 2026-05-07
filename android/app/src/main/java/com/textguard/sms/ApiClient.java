@@ -54,8 +54,8 @@ public class ApiClient {
 
         // Default API URL - Change this to your computer's IP address
         // Find your IP: Run "ipconfig" in terminal and look for IPv4 Address
-        // Example: http://192.168.1.5:8000/api
-        this.baseUrl = prefs.getString("api_url", "http://192.168.1.5:8000/api");
+        // Current IP: 192.168.0.102
+        this.baseUrl = prefs.getString("api_url", "http://192.168.0.102:8000/api");
 
         // Build OkHttpClient with security settings
         OkHttpClient.Builder builder = new OkHttpClient.Builder()

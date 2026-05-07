@@ -16,30 +16,50 @@ except ImportError:
 
 
 class SMSClassifier:
-    """Multi-model SMS classifier with Naive Bayes and BERT"""
+    """Multi-model SMS classifier with ensemble of 5 ML models"""
     
     def __init__(self):
         self.models_dir = settings.ML_MODELS_DIR
         self.load_models()
     
     def load_models(self):
-        """Load trained models"""
+        """Load all trained models"""
         try:
-            # Load Naive Bayes model
-            nb_path = os.path.join(self.models_dir, 'naive_bayes_model.pkl')
-            vectorizer_path = os.path.join(self.models_dir, 'tfidf_vectorizer.pkl')
-            
-            if os.path.exists(nb_path) and os.path.exists(vectorizer_path):
-                with open(nb_path, 'rb') as f:
-                    self.nb_model = pickle.load(f)
-                with open(vectorizer_path, 'rb') as f:
-                    self.vectorizer = pickle.load(f)
+            # Load label encoder
+            encoder_path = os.path.join(self.models_dir, 'label_encoder.pkl')
+            if os.path.exists(encoder_path):
+                with open(encoder_path, 'rb') as f:
+                    self.label_encoder = pickle.load(f)
             else:
-                # Initialize with default models
-                self.nb_model = None
-                self.vectorizer = None
+                self.label_encoder = None
             
-            # Load BERT model (using lightweight DistilBERT)
+            # Load all 5 models (with TF-IDF vectorizer)
+            self.models = {}
+            model_names = [
+                'naive_bayes_tfidf',
+                'logistic_regression_tfidf',
+                'random_forest_tfidf',
+                'gradient_boosting_tfidf',
+                'svm_tfidf'
+            ]
+            
+            for model_name in model_names:
+                model_path = os.path.join(self.models_dir, f'{model_name}_model.pkl')
+                if os.path.exists(model_path):
+                    with open(model_path, 'rb') as f:
+                        self.models[model_name] = pickle.load(f)
+                    print(f"Loaded model: {model_name}")
+                else:
+                    print(f"Model not found: {model_name}")
+            
+            # Load best model as fallback
+            best_model_path = os.path.join(self.models_dir, 'best_model.pkl')
+            if os.path.exists(best_model_path) and 'naive_bayes_tfidf' not in self.models:
+                with open(best_model_path, 'rb') as f:
+                    self.models['naive_bayes_tfidf'] = pickle.load(f)
+                print("Loaded best model as Naive Bayes")
+            
+            # Load BERT model (optional)
             if not BERT_AVAILABLE:
                 self.tokenizer = None
                 self.bert_model = None
@@ -51,7 +71,6 @@ class SMSClassifier:
                     self.tokenizer = AutoTokenizer.from_pretrained(bert_path)
                     self.bert_model = AutoModelForSequenceClassification.from_pretrained(bert_path)
                 else:
-                    # Use pre-trained model as fallback
                     self.tokenizer = None
                     self.bert_model = None
             except Exception as e:
@@ -61,8 +80,8 @@ class SMSClassifier:
                 
         except Exception as e:
             print(f"Model loading error: {e}")
-            self.nb_model = None
-            self.vectorizer = None
+            self.models = {}
+            self.label_encoder = None
             self.tokenizer = None
             self.bert_model = None
     
@@ -81,24 +100,63 @@ class SMSClassifier:
         
         return text
     
+    def predict_all_models(self, text):
+        """Get predictions from all 5 models"""
+        predictions = {}
+        
+        for model_name, model in self.models.items():
+            try:
+                prediction = model.predict([text])[0]
+                probabilities = model.predict_proba([text])[0]
+                confidence = float(max(probabilities))
+                
+                # Convert numeric prediction to category name
+                if self.label_encoder:
+                    category = self.label_encoder.inverse_transform([prediction])[0]
+                else:
+                    category = prediction
+                
+                predictions[model_name] = {
+                    'category': category,
+                    'confidence': confidence,
+                    'probabilities': {
+                        self.label_encoder.inverse_transform([i])[0] if self.label_encoder else str(i): float(prob)
+                        for i, prob in enumerate(probabilities)
+                    }
+                }
+            except Exception as e:
+                print(f"Error predicting with {model_name}: {e}")
+                predictions[model_name] = {
+                    'category': 'error',
+                    'confidence': 0.0,
+                    'probabilities': {}
+                }
+        
+        return predictions
+    
     def predict_naive_bayes(self, text):
-        """Predict using Naive Bayes model"""
-        if self.nb_model is None or self.vectorizer is None:
-            # Fallback rule-based classification
+        """Predict using Naive Bayes model (backward compatibility)"""
+        if 'naive_bayes_tfidf' not in self.models:
             return self._rule_based_classification(text)
         
         try:
-            text_vectorized = self.vectorizer.transform([text])
-            prediction = self.nb_model.predict(text_vectorized)[0]
-            probabilities = self.nb_model.predict_proba(text_vectorized)[0]
+            model = self.models['naive_bayes_tfidf']
+            prediction = model.predict([text])[0]
+            probabilities = model.predict_proba([text])[0]
             confidence = float(max(probabilities))
             
+            # Convert numeric prediction to category name
+            if self.label_encoder:
+                category = self.label_encoder.inverse_transform([prediction])[0]
+            else:
+                category = prediction
+            
             return {
-                'category': prediction,
+                'category': category,
                 'confidence': confidence,
                 'probabilities': {
-                    cat: float(prob) 
-                    for cat, prob in zip(self.nb_model.classes_, probabilities)
+                    self.label_encoder.inverse_transform([i])[0] if self.label_encoder else str(i): float(prob)
+                    for i, prob in enumerate(probabilities)
                 }
             }
         except Exception as e:
@@ -196,33 +254,75 @@ class SMSClassifier:
         }
     
     def predict(self, text, language='en'):
-        """Predict SMS category using multiple models"""
+        """Predict SMS category using ensemble of all models"""
         # Preprocess
         processed_text = self.preprocess_text(text, language)
         
-        # Get predictions from both models
-        nb_result = self.predict_naive_bayes(processed_text)
+        # Get predictions from all 5 models
+        all_predictions = self.predict_all_models(processed_text)
+        
+        # Get BERT prediction
         bert_result = self.predict_bert(processed_text)
         
-        # Ensemble: Use BERT if available, otherwise Naive Bayes
-        if bert_result:
-            final_category = bert_result['category']
-            final_confidence = (nb_result['confidence'] + bert_result['confidence']) / 2
+        # Ensemble: Use voting or averaging
+        if all_predictions:
+            # Count votes for each category
+            category_votes = {}
+            category_confidences = {}
+            
+            for model_name, pred in all_predictions.items():
+                if pred['category'] != 'error':
+                    cat = pred['category']
+                    category_votes[cat] = category_votes.get(cat, 0) + 1
+                    if cat not in category_confidences:
+                        category_confidences[cat] = []
+                    category_confidences[cat].append(pred['confidence'])
+            
+            # Final category: most votes
+            if category_votes:
+                final_category = max(category_votes.items(), key=lambda x: x[1])[0]
+                # Average confidence from models that predicted this category
+                final_confidence = sum(category_confidences[final_category]) / len(category_confidences[final_category])
+            else:
+                # Fallback to Naive Bayes
+                nb_result = all_predictions.get('naive_bayes_tfidf', {})
+                final_category = nb_result.get('category', 'personal')
+                final_confidence = nb_result.get('confidence', 0.5)
         else:
-            final_category = nb_result['category']
-            final_confidence = nb_result['confidence']
+            # No models loaded, use rule-based
+            fallback = self._rule_based_classification(processed_text)
+            final_category = fallback['category']
+            final_confidence = fallback['confidence']
+            all_predictions = {}
+        
+        # Build model comparison
+        model_comparison = {}
+        
+        # Add all 5 model predictions
+        model_display_names = {
+            'naive_bayes_tfidf': 'Naive Bayes',
+            'logistic_regression_tfidf': 'Logistic Regression',
+            'random_forest_tfidf': 'Random Forest',
+            'gradient_boosting_tfidf': 'Gradient Boosting',
+            'svm_tfidf': 'SVM'
+        }
+        
+        for model_key, display_name in model_display_names.items():
+            if model_key in all_predictions:
+                model_comparison[display_name.lower().replace(' ', '_')] = {
+                    'category': all_predictions[model_key]['category'],
+                    'confidence': all_predictions[model_key]['confidence']
+                }
+        
+        # Add BERT if available
+        if bert_result:
+            model_comparison['bert'] = {
+                'category': bert_result['category'],
+                'confidence': bert_result['confidence']
+            }
         
         return {
             'category': final_category,
             'confidence': round(final_confidence, 4),
-            'model_comparison': {
-                'naive_bayes': {
-                    'category': nb_result['category'],
-                    'confidence': round(nb_result['confidence'], 4)
-                },
-                'bert': {
-                    'category': bert_result['category'] if bert_result else 'N/A',
-                    'confidence': round(bert_result['confidence'], 4) if bert_result else 0
-                }
-            }
+            'model_comparison': model_comparison
         }

@@ -1,0 +1,194 @@
+========================================
+   EASY SETUP - FOLLOW THESE STEPS
+========================================
+
+Your Computer IP: 192.168.0.102
+Your Backend URL: http://192.168.0.102:8000/api
+
+I've already configured the Android app with your IP!
+
+
+STEP 1: BUILD ANDROID APK
+========================================
+
+Option A: Using Android Studio (Recommended)
+---------------------------------------------
+1. Download Android Studio: https://developer.android.com/studio
+2. Install it
+3. Open Android Studio
+4. Click: File → Open
+5. Select the "android" folder in your project
+6. Wait for Gradle sync (2-3 minutes)
+7. Click: Build → Build Bundle(s) / APK(s) → Build APK(s)
+8. Wait 2-3 minutes
+9. APK will be at: android/app/build/outputs/apk/debug/app-debug.apk
+
+Option B: Command Line (If you have Android SDK)
+-------------------------------------------------
+1. Open Command Prompt
+2. Run: cd android
+3. Run: gradle assembleDebug
+   (or: gradlew assembleDebug if gradlew exists)
+4. APK will be at: app/build/outputs/apk/debug/app-debug.apk
+
+
+STEP 2: TRANSFER APK TO PHONE
+========================================
+
+Choose one method:
+
+Method 1: USB Cable
+-------------------
+1. Connect phone to computer
+2. Copy app-debug.apk to phone's Downloads
+3. Disconnect
+
+Method 2: Google Drive
+----------------------
+1. Upload app-debug.apk to Google Drive
+2. Open Drive on phone
+3. Download the APK
+
+Method 3: Email
+---------------
+1. Email the APK to yourself
+2. Open email on phone
+3. Download attachment
+
+
+STEP 3: INSTALL ON PHONE
+========================================
+
+1. On phone, go to: Settings → Security
+2. Enable "Unknown Sources" or "Install Unknown Apps"
+3. Open file manager
+4. Go to Downloads
+5. Tap app-debug.apk
+6. Tap "Install"
+7. Tap "Open" when done
+
+
+STEP 4: START BACKEND SERVER
+========================================
+
+1. Open Command Prompt (NEW window)
+2. Run these commands:
+
+   cd backend
+   venv\Scripts\activate
+   python manage.py runserver 0.0.0.0:8000
+
+3. You should see:
+   "Starting development server at http://0.0.0.0:8000/"
+
+4. KEEP THIS WINDOW OPEN!
+
+
+STEP 5: CONFIGURE APP ON PHONE
+========================================
+
+The app is already configured with your IP!
+But if you need to change it:
+
+1. Open TextGuard app
+2. Tap Settings button (⚙️)
+3. Enter: http://192.168.0.102:8000/api
+4. Tap Save
+
+
+STEP 6: GRANT PERMISSIONS
+========================================
+
+1. The app will ask for SMS permissions
+   → Tap "Allow"
+
+2. Enable Notification Access:
+   Settings → Apps → Special Access → Notification Access
+   → Enable TextGuard
+
+3. Disable Battery Optimization:
+   Settings → Apps → TextGuard → Battery
+   → Select "No restrictions"
+
+
+STEP 7: ENABLE MONITORING
+========================================
+
+1. In TextGuard app, turn ON:
+   - Auto Monitor SMS
+   - Notification Analysis
+
+2. You should see:
+   - Status: "🟢 Monitoring Active"
+
+
+STEP 8: TEST
+========================================
+
+Send yourself a test SMS from another phone.
+The app should:
+✓ Automatically detect it
+✓ Analyze it
+✓ Show notification
+✓ Display in SMS feed
+
+
+DONE!
+========================================
+
+Every SMS you receive will now be automatically
+analyzed for spam and phishing!
+
+
+TROUBLESHOOTING
+========================================
+
+Can't build APK:
+→ Use Android Studio (Option A above)
+→ It's the easiest and most reliable method
+
+App says "Cannot connect":
+→ Make sure backend server is running
+→ Check both devices on SAME WiFi
+→ Verify IP is correct: 192.168.0.102
+
+Backend won't start:
+→ Make sure you're in backend folder
+→ Make sure virtual environment is activated
+→ Check for error messages
+
+SMS not detected:
+→ Grant SMS permissions
+→ Turn ON "Auto Monitor SMS"
+→ Check backend is running
+
+
+QUICK COMMANDS
+========================================
+
+Start Backend:
+--------------
+cd backend
+venv\Scripts\activate
+python manage.py runserver 0.0.0.0:8000
+
+Check IP:
+---------
+ipconfig
+
+Your IP: 192.168.0.102
+Backend URL: http://192.168.0.102:8000/api
+
+
+NEED HELP?
+========================================
+
+The Android app is already configured with
+your IP address (192.168.0.102).
+
+Just:
+1. Build the APK using Android Studio
+2. Install on phone
+3. Start backend server
+4. Grant permissions
+5. Done!

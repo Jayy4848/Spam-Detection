@@ -149,4 +149,36 @@ export const checkHealth = async () => {
   return response.data;
 };
 
+export const resetData = async () => {
+  const response = await api.post('/reset/');
+  return response.data;
+};
+
+export const getModelInfo = async () => {
+  const response = await api.get('/model-info/');
+  return response.data;
+};
+
+export const getRecentMessages = async (params = {}) => {
+  const { limit = 20, offset = 0, category = null, risk_level = null } = params;
+  const queryParams = new URLSearchParams();
+  
+  queryParams.append('limit', limit);
+  queryParams.append('offset', offset);
+  if (category) queryParams.append('category', category);
+  if (risk_level) queryParams.append('risk_level', risk_level);
+  
+  const response = await api.get(`/recent-messages/?${queryParams.toString()}`);
+  return response.data;
+};
+
+export const deleteMessage = async (messageId) => {
+  if (!messageId || typeof messageId !== 'number') {
+    throw new Error('Invalid message ID');
+  }
+  
+  const response = await api.delete(`/messages/${messageId}/`);
+  return response.data;
+};
+
 export default api;

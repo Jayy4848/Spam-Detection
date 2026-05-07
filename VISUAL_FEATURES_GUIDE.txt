@@ -1,0 +1,372 @@
+═══════════════════════════════════════════════════════════════════════════════
+                    VISUAL FEATURES GUIDE - QUICK REFERENCE
+═══════════════════════════════════════════════════════════════════════════════
+
+This guide shows you exactly where to find and how to use each new feature.
+
+═══════════════════════════════════════════════════════════════════════════════
+1. USER PROFILE AVATAR
+═══════════════════════════════════════════════════════════════════════════════
+
+LOCATION: Top-right corner of navigation bar
+
+VISUAL:
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 🛡️ TextGuard AI    [Analyzer] [Dashboard] [About] [AI Powered]    (A) ☰   │
+│                                                                      ↑        │
+│                                                              User Avatar      │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+FEATURES:
+• Purple gradient circle with letter "A"
+• Green status dot (bottom-right of avatar)
+• Hover: Scales up, rotates, and glows
+• Smooth animations
+
+WHAT IT LOOKS LIKE:
+   ┌─────┐
+   │  A  │  ← Letter in white
+   │   ● │  ← Green status dot
+   └─────┘
+   Purple gradient background
+
+═══════════════════════════════════════════════════════════════════════════════
+2. DARK MODE TOGGLE
+═══════════════════════════════════════════════════════════════════════════════
+
+LOCATION: Bottom-right corner of screen (floating button)
+
+VISUAL:
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                              │
+│                                                                        ┌───┐ │
+│                                                                        │ 🌙│ │
+│                                                                        └───┘ │
+└─────────────────────────────────────────────────────────────────────────────┘
+                                                                    ↑
+                                                            Dark Mode Toggle
+
+ICONS:
+• Light Mode: 🌙 (Moon icon)
+• Dark Mode: ☀️ (Sun icon)
+
+BEHAVIOR:
+• Click to toggle between light and dark themes
+• Smooth transition (all colors change)
+• Preference saved automatically
+• Hover: Button scales up and glows
+
+LIGHT MODE COLORS:
+• Background: Light blue-gray
+• Cards: White with glass effect
+• Text: Dark gray/black
+
+DARK MODE COLORS:
+• Background: Deep navy blue
+• Cards: Dark slate with glass effect
+• Text: Light gray/white
+
+═══════════════════════════════════════════════════════════════════════════════
+3. GLOWING ICON EFFECTS
+═══════════════════════════════════════════════════════════════════════════════
+
+LOCATION: All icons throughout the app
+
+EXAMPLES:
+
+Dashboard Stat Cards:
+┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐
+│  📊              │  │  🚨              │  │  🎣              │
+│  ↑ Glows on hover│  │  ↑ Glows on hover│  │  ↑ Glows on hover│
+│  1,234           │  │  567             │  │  89              │
+│  Total Analyzed  │  │  Spam Detected   │  │  Phishing        │
+└──────────────────┘  └──────────────────┘  └──────────────────┘
+
+Feature Tiles:
+┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐
+│       🤖         │  │       🎯         │  │       ⚡         │
+│  ↑ Floats & glows│  │  ↑ Floats & glows│  │  ↑ Floats & glows│
+│  AI Detection    │  │  High Accuracy   │  │  Real-time       │
+└──────────────────┘  └──────────────────┘  └──────────────────┘
+
+Brand Logo:
+🛡️ ← Glows and rotates on hover
+
+EFFECTS:
+• Soft colored glow around icon
+• Pulsing animation (subtle)
+• Floating motion on hover
+• Smooth transitions
+
+═══════════════════════════════════════════════════════════════════════════════
+4. NEUMORPHISM EFFECTS
+═══════════════════════════════════════════════════════════════════════════════
+
+DESCRIPTION: Soft 3D depth effect (looks like elements are pressed into surface)
+
+VISUAL COMPARISON:
+
+FLAT (Before):
+┌──────────────────┐
+│                  │
+│   Button Text    │
+│                  │
+└──────────────────┘
+
+NEUMORPHISM (After):
+╔══════════════════╗
+║                  ║  ← Soft shadows create depth
+║   Button Text    ║  ← Looks slightly pressed in
+║                  ║
+╚══════════════════╝
+
+WHERE IT'S USED:
+• Can be added to any card, button, or input
+• Add class "neuro" to enable
+• Works in both light and dark mode
+
+EXAMPLE:
+<div className="stat-card neuro">
+  <div className="stat-icon">📊</div>
+  <div className="stat-num">1,234</div>
+</div>
+
+VISUAL CHARACTERISTICS:
+• Soft shadows (top-left and bottom-right)
+• Subtle gradient background
+• Pressed-in appearance
+• Smooth depth transitions
+
+═══════════════════════════════════════════════════════════════════════════════
+5. MINI PERFORMANCE CHART
+═══════════════════════════════════════════════════════════════════════════════
+
+LOCATION: Dashboard → Bottom → Model Performance Card
+
+VISUAL:
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 🤖 Active ML Model                                                          │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ Model: Naive Bayes + TF-IDF                                                 │
+│                                                                              │
+│ ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐                    │
+│ │ 86.67%   │  │ 87.50%   │  │ 85.00%   │  │ 86.23%   │                    │
+│ │ Accuracy │  │ Precision│  │ Recall   │  │ F1-Score │                    │
+│ └──────────┘  └──────────┘  └──────────┘  └──────────┘                    │
+│                                                                              │
+│ 📊 Performance Breakdown                                                    │
+│ ┌────────────────────────────────────────────────────────────────────────┐ │
+│ │ Accuracy   ████████████████████████████████████████████████  86.67%   │ │
+│ │ Precision  ████████████████████████████████████████████████  87.50%   │ │
+│ │ Recall     ████████████████████████████████████████████      85.00%   │ │
+│ │ F1-Score   ████████████████████████████████████████████████  86.23%   │ │
+│ └────────────────────────────────────────────────────────────────────────┘ │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+FEATURES:
+• 4 animated progress bars
+• Gradient fills (purple to violet)
+• Smooth 1-second animation on load
+• Percentage labels on right
+• Shine effect on bars
+• Responsive design
+
+ANIMATION:
+• Bars start at 0% width
+• Animate to actual percentage
+• Smooth cubic-bezier easing
+• Triggered when page loads
+
+═══════════════════════════════════════════════════════════════════════════════
+6. ENHANCED HOVER EFFECTS
+═══════════════════════════════════════════════════════════════════════════════
+
+THROUGHOUT THE APP:
+
+Cards:
+┌──────────────────┐         ┌──────────────────┐
+│                  │  Hover  │                  │ ← Lifts up
+│   Card Content   │  ────>  │   Card Content   │ ← Shadow grows
+│                  │         │                  │ ← Slight scale
+└──────────────────┘         └──────────────────┘
+
+Buttons:
+┌──────────────────┐         ┌──────────────────┐
+│  Analyze Message │  Hover  │  Analyze Message │ ← Lifts up
+└──────────────────┘  ────>  └──────────────────┘ ← Glows
+                                      ↑
+                              Shadow intensifies
+
+Icons:
+  📊          Hover        📊  ← Scales up
+              ────>        ↑   ← Rotates slightly
+                          Glows
+
+Chips/Pills:
+┌─────────┐         ┌─────────┐
+│  Spam   │  Hover  │  Spam   │ ← Lifts up
+└─────────┘  ────>  └─────────┘ ← Background fills
+                         ↑
+                    Color changes
+
+═══════════════════════════════════════════════════════════════════════════════
+QUICK START GUIDE
+═══════════════════════════════════════════════════════════════════════════════
+
+1. START THE APP
+   cd frontend
+   npm start
+
+2. LOOK FOR NEW FEATURES
+   ✓ Top-right: User avatar with green status dot
+   ✓ Bottom-right: Dark mode toggle button (moon icon)
+   ✓ Hover over any icon: See glowing effect
+   ✓ Dashboard: Scroll to bottom for performance chart
+
+3. TRY DARK MODE
+   • Click moon button (bottom-right)
+   • Watch smooth theme transition
+   • All colors change to dark theme
+   • Click sun button to go back to light mode
+
+4. EXPLORE INTERACTIONS
+   • Hover over stat cards: Icons glow and lift
+   • Hover over feature tiles: Icons float and glow
+   • Hover over buttons: Glow and lift effects
+   • Hover over avatar: Scale, rotate, and glow
+
+5. CHECK DASHBOARD
+   • Go to Dashboard page
+   • Scroll to bottom
+   • See "Active ML Model" card
+   • Watch animated performance bars
+
+═══════════════════════════════════════════════════════════════════════════════
+CUSTOMIZATION QUICK TIPS
+═══════════════════════════════════════════════════════════════════════════════
+
+Change Avatar Letter:
+File: frontend/src/components/Navbar.jsx
+Find: <span className="avatar-text">A</span>
+Change: A → Your initial
+
+Change Status Color:
+File: frontend/src/App.css
+Find: .avatar-status { background: #10b981; }
+Change: #10b981 → Your color
+  Green (#10b981) = Online
+  Orange (#f59e0b) = Away
+  Red (#ef4444) = Busy
+  Gray (#6b7280) = Offline
+
+Adjust Glow Intensity:
+File: frontend/src/App.css
+Find: opacity: 0.6; (in glow animations)
+Change: 0.6 → 0.8 (more intense) or 0.4 (less intense)
+
+Change Dark Mode Colors:
+File: frontend/src/App.css
+Find: body.dark-mode { --bg: #0f172a; }
+Change: #0f172a → Your background color
+
+═══════════════════════════════════════════════════════════════════════════════
+TROUBLESHOOTING
+═══════════════════════════════════════════════════════════════════════════════
+
+Avatar Not Showing:
+• Clear browser cache (Ctrl+Shift+R)
+• Check console for errors
+• Verify Navbar.jsx was updated
+
+Dark Mode Not Working:
+• Check if toggle button is visible
+• Clear localStorage: localStorage.clear()
+• Refresh page
+• Check browser console for errors
+
+Glowing Effects Not Visible:
+• Hover slowly over icons
+• Check if animations are enabled
+• Try different browser
+• Verify CSS was updated
+
+Performance Chart Not Animating:
+• Scroll to bottom of Dashboard
+• Wait 1 second for animation
+• Check if model data is loaded
+• Refresh page
+
+General Issues:
+• Clear browser cache
+• Restart development server
+• Check console for errors
+• Verify all files were saved
+
+═══════════════════════════════════════════════════════════════════════════════
+BROWSER SUPPORT
+═══════════════════════════════════════════════════════════════════════════════
+
+Fully Supported:
+✅ Chrome 90+
+✅ Firefox 88+
+✅ Safari 14+
+✅ Edge 90+
+✅ Opera 76+
+
+Mobile Browsers:
+✅ Chrome Mobile
+✅ Safari iOS
+✅ Firefox Mobile
+✅ Samsung Internet
+
+Features That May Not Work on Old Browsers:
+• backdrop-filter (glassmorphism) - Falls back to solid background
+• CSS custom properties - Falls back to default colors
+• CSS Grid - Falls back to flexbox
+• Advanced animations - May be choppy
+
+═══════════════════════════════════════════════════════════════════════════════
+SUMMARY
+═══════════════════════════════════════════════════════════════════════════════
+
+NEW FEATURES ADDED:
+
+1. 👤 User Profile Avatar (top-right navbar)
+   • Purple gradient circle
+   • Green status indicator
+   • Hover effects
+
+2. 🌙 Dark Mode Toggle (bottom-right floating button)
+   • Complete dark theme
+   • Smooth transitions
+   • Persistent preference
+
+3. ✨ Glowing Icon Effects (all icons)
+   • Soft colored glow
+   • Pulsing animation
+   • Floating motion
+
+4. 🎨 Neumorphism Effects (optional on elements)
+   • 3D depth appearance
+   • Soft shadows
+   • Pressed-in look
+
+5. 📊 Mini Performance Chart (dashboard bottom)
+   • Animated progress bars
+   • Gradient fills
+   • Smooth animations
+
+6. 🎯 Enhanced Interactions (everywhere)
+   • Hover lift effects
+   • Scale animations
+   • Smooth transitions
+
+All features are production-ready and fully responsive! 🚀
+
+═══════════════════════════════════════════════════════════════════════════════

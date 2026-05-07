@@ -1,0 +1,206 @@
+========================================
+  MANUAL FIREWALL FIX - STEP BY STEP
+========================================
+
+PROBLEM: Port 3000 is blocked by Windows Firewall
+SOLUTION: Open port 3000 manually
+
+
+METHOD 1: Run Script as Administrator (EASIEST)
+========================================
+
+1. Find file: OPEN_PORT_3000.bat
+
+2. RIGHT-CLICK on it
+
+3. Select "Run as administrator"
+
+4. Click "Yes" when Windows asks
+
+5. Wait for "PORT 3000 IS NOW OPEN!"
+
+6. Try on phone: http://192.168.0.102:3000
+
+DONE!
+
+
+METHOD 2: Windows Defender Firewall (Manual)
+========================================
+
+Step 1: Open Windows Defender Firewall
+---------------------------------------
+1. Press Windows key
+2. Type: "Windows Defender Firewall"
+3. Click on it
+
+Step 2: Open Advanced Settings
+-------------------------------
+1. Click "Advanced settings" on the left
+2. Windows Defender Firewall with Advanced Security opens
+
+Step 3: Create Inbound Rule
+----------------------------
+1. Click "Inbound Rules" on the left
+2. Click "New Rule..." on the right
+3. Select "Port" → Click "Next"
+4. Select "TCP"
+5. Select "Specific local ports"
+6. Type: 3000
+7. Click "Next"
+8. Select "Allow the connection"
+9. Click "Next"
+10. Check ALL boxes (Domain, Private, Public)
+11. Click "Next"
+12. Name: TextGuard Frontend
+13. Click "Finish"
+
+Step 4: Create Outbound Rule (Optional)
+----------------------------------------
+1. Click "Outbound Rules" on the left
+2. Repeat steps from Step 3
+
+Step 5: Test
+------------
+Try on phone: http://192.168.0.102:3000
+
+
+METHOD 3: Temporarily Disable Firewall (Quick Test)
+========================================
+
+WARNING: Only for testing! Turn it back on after.
+
+1. Press Windows key
+2. Type: "Windows Security"
+3. Click "Firewall & network protection"
+4. Click on "Private network"
+5. Turn OFF "Windows Defender Firewall"
+6. Try on phone: http://192.168.0.102:3000
+7. If it works, the firewall was the issue
+8. Turn firewall back ON
+9. Use Method 1 or 2 to open port properly
+
+
+METHOD 4: Check Existing Rules
+========================================
+
+Maybe the rule already exists but is disabled:
+
+1. Open Windows Defender Firewall Advanced Settings
+2. Click "Inbound Rules"
+3. Look for any rule with port 3000
+4. If found, right-click → Enable
+5. Try on phone
+
+
+VERIFICATION
+========================================
+
+After opening the port, verify:
+
+On Computer:
+------------
+Open Command Prompt and run:
+netsh advfirewall firewall show rule name="TextGuard Frontend Port 3000 IN"
+
+Should show:
+Rule Name: TextGuard Frontend Port 3000 IN
+Enabled: Yes
+Direction: In
+Protocol: TCP
+LocalPort: 3000
+Action: Allow
+
+On Phone:
+---------
+Open Chrome and go to:
+http://192.168.0.102:3000
+
+Should show: TextGuard homepage
+
+
+TROUBLESHOOTING
+========================================
+
+Still not working after opening port?
+
+Check 1: Both on Same WiFi
+---------------------------
+Computer: Settings → Network → WiFi → Check network name
+Phone: Settings → WiFi → Must be SAME network
+
+Check 2: Server is Running
+---------------------------
+Look for terminal window showing:
+"You can now view sms-security-frontend in the browser"
+"On Your Network: http://192.168.0.102:3000"
+
+Check 3: Antivirus Software
+----------------------------
+Some antivirus software has its own firewall:
+- Norton
+- McAfee
+- Kaspersky
+- Avast
+- AVG
+
+Check their settings and allow port 3000.
+
+Check 4: Router Firewall
+-------------------------
+Some routers have built-in firewalls.
+Check router admin page (usually 192.168.0.1 or 192.168.1.1)
+
+
+QUICK DIAGNOSTIC
+========================================
+
+Run these commands on computer:
+
+1. Check if port is listening:
+   netstat -an | findstr ":3000"
+   
+   Should show:
+   TCP    0.0.0.0:3000    0.0.0.0:0    LISTENING
+
+2. Check firewall rule:
+   netsh advfirewall firewall show rule name=all | findstr "3000"
+   
+   Should show rules for port 3000
+
+3. Test from computer:
+   curl http://192.168.0.102:3000
+   
+   Should return HTML
+
+
+EXPECTED RESULT
+========================================
+
+After fixing firewall:
+
+✓ Backend works: http://192.168.0.102:8000/api/health/
+✓ Frontend works: http://192.168.0.102:3000
+
+Both accessible from phone on same WiFi.
+
+
+NEED HELP?
+========================================
+
+If still not working, tell me:
+
+1. Did you run OPEN_PORT_3000.bat as administrator?
+2. What did it say?
+3. Are both devices on same WiFi? (check network names)
+4. Do you have antivirus software? (which one?)
+5. Can you access http://localhost:3000 on computer?
+
+
+ALTERNATIVE: Use Computer Browser
+========================================
+
+While fixing phone access, you can use the app on computer:
+
+http://localhost:3000
+
+This works without any firewall issues!

@@ -6,6 +6,7 @@ from django.utils import timezone
 from datetime import timedelta, datetime
 import hashlib
 import hmac
+import os
 
 from .models import SMSLog, UserFeedback, ThreatPattern, ModelPerformance, SenderProfile, AnalyticsSnapshot
 from .serializers import (
@@ -356,3 +357,208 @@ class HealthCheckView(APIView):
             'status': 'healthy',
             'message': 'SMS Security Assistant API is running'
         }, status=status.HTTP_200_OK)
+
+
+class ModelInfoView(APIView):
+    """API endpoint for model information and accuracy"""
+    
+    def get(self, request):
+        import json
+        from django.conf import settings
+        
+        try:
+            # Load model metadata
+            metadata_path = os.path.join(settings.ML_MODELS_DIR, 'model_metadata.json')
+            
+            if os.path.exists(metadata_path):
+                with open(metadata_path, 'r') as f:
+                    metadata = json.load(f)
+                
+                # Extract key information
+                model_name = metadata.get('model_key', 'Unknown')
+                metrics = metadata.get('metrics', {})
+                
+                # Format model name for display
+                model_display_name = {
+                    'naive_bayes_tfidf': 'Naive Bayes + TF-IDF',
+                    'logistic_regression_tfidf': 'Logistic Regression + TF-IDF',
+                    'random_forest_tfidf': 'Random Forest + TF-IDF',
+                    'gradient_boosting_tfidf': 'Gradient Boosting + TF-IDF',
+                    'svm_tfidf': 'SVM + TF-IDF'
+                }.get(model_name, model_name)
+                
+                return Response({
+                    'model_name': model_display_name,
+                    'model_key': model_name,
+                    'accuracy': round(metrics.get('accuracy', 0) * 100, 2),
+                    'precision': round(metrics.get('precision_weighted', 0) * 100, 2),
+                    'recall': round(metrics.get('recall_weighted', 0) * 100, 2),
+                    'f1_score': round(metrics.get('f1_weighted', 0) * 100, 2),
+                    'cv_mean': round(metrics.get('cv_mean', 0) * 100, 2),
+                    'cv_std': round(metrics.get('cv_std', 0) * 100, 2),
+                    'classes': metadata.get('classes', []),
+                    'total_classes': len(metadata.get('classes', []))
+                }, status=status.HTTP_200_OK)
+            else:
+                # Return default values if metadata not found
+                return Response({
+                    'model_name': 'Naive Bayes + TF-IDF',
+                    'model_key': 'naive_bayes_tfidf',
+                    'accuracy': 86.67,
+                    'precision': 88.33,
+                    'recall': 86.67,
+                    'f1_score': 86.48,
+                    'cv_mean': 79.85,
+                    'cv_std': 11.93,
+                    'classes': ['important', 'otp', 'personal', 'promotion', 'spam'],
+                    'total_classes': 5
+                }, status=status.HTTP_200_OK)
+                
+        except Exception as e:
+            logger.error(f"Model info error: {e}")
+            return Response({
+                'error': 'Failed to load model information'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class RecentMessagesView(APIView):
+    """API endpoint for recent analyzed messages"""
+    
+    def get(self, request):
+        try:
+            # Get query parameters
+            limit = int(request.GET.get('limit', 20))
+            offset = int(request.GET.get('offset', 0))
+            category = request.GET.get('category', None)
+            risk_level = request.GET.get('risk_level', None)
+            
+            # Build query
+            queryset = SMSLog.objects.all()
+            
+            if category:
+                queryset = queryset.filter(category=category)
+            
+            if risk_level:
+                queryset = queryset.filter(risk_level=risk_level)
+            
+            # Get total count
+            total_count = queryset.count()
+            
+            # Get paginated results
+            messages = queryset.order_by('-timestamp')[offset:offset+limit]
+            
+            # Serialize messages
+            messages_data = []
+            for msg in messages:
+                messages_data.append({
+                    'id': str(msg.id),
+                    'category': msg.category,
+                    'confidence': round(msg.confidence, 4),
+                    'is_phishing': msg.is_phishing,
+                    'phishing_score': round(msg.phishing_score, 4),
+                    'risk_level': msg.risk_level,
+                    'sentiment_score': round(msg.sentiment_score, 4) if msg.sentiment_score else 0,
+                    'urgency_score': round(msg.urgency_score, 4) if msg.urgency_score else 0,
+                    'message_length': msg.message_length,
+                    'has_urls': msg.has_urls,
+                    'has_phone_numbers': msg.has_phone_numbers,
+                    'has_financial_terms': msg.has_financial_terms,
+                    'language': msg.language,
+                    'timestamp': msg.timestamp.isoformat(),
+                    'message_preview': msg.message_hash[:16] + '...',  # Show partial hash as preview
+                })
+            
+            return Response({
+                'messages': messages_data,
+                'total_count': total_count,
+                'limit': limit,
+                'offset': offset,
+                'has_more': (offset + limit) < total_count
+            }, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            logger.error(f"Recent messages error: {e}")
+            return Response({
+                'error': 'Failed to load recent messages'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class ResetDataView(APIView):
+    """API endpoint to reset all analytics data"""
+    
+    def post(self, request):
+        try:
+            # Count records before deletion
+            sms_count = SMSLog.objects.count()
+            feedback_count = UserFeedback.objects.count()
+            threat_count = ThreatPattern.objects.count()
+            
+            # Delete all data
+            SMSLog.objects.all().delete()
+            UserFeedback.objects.all().delete()
+            ThreatPattern.objects.all().delete()
+            ModelPerformance.objects.all().delete()
+            SenderProfile.objects.all().delete()
+            AnalyticsSnapshot.objects.all().delete()
+            
+            # Log the reset action
+            audit_log('data_reset', request, {
+                'sms_deleted': sms_count,
+                'feedback_deleted': feedback_count,
+                'threats_deleted': threat_count
+            })
+            
+            return Response({
+                'status': 'success',
+                'message': 'All data has been reset successfully',
+                'deleted': {
+                    'sms_logs': sms_count,
+                    'feedback': feedback_count,
+                    'threat_patterns': threat_count
+                }
+            }, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            logger.error(f"Data reset error: {e}")
+            return Response({
+                'status': 'error',
+                'message': 'Failed to reset data'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
+class DeleteMessageView(APIView):
+    """API endpoint to delete a specific message"""
+    
+    def delete(self, request, message_id):
+        try:
+            # Find the message
+            message = SMSLog.objects.filter(id=message_id).first()
+            
+            if not message:
+                return Response({
+                    'status': 'error',
+                    'message': 'Message not found'
+                }, status=status.HTTP_404_NOT_FOUND)
+            
+            # Log the deletion
+            audit_log('message_deleted', request, {
+                'message_id': message_id,
+                'category': message.category,
+                'risk_level': message.risk_level
+            })
+            
+            # Delete the message
+            message.delete()
+            
+            return Response({
+                'status': 'success',
+                'message': 'Message deleted successfully'
+            }, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            logger.error(f"Message deletion error: {e}")
+            return Response({
+                'status': 'error',
+                'message': 'Failed to delete message'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

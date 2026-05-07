@@ -157,6 +157,90 @@ export default function ResultCard({ result, message }) {
           </div>
         </div>
 
+        {/* Model Comparison */}
+        {result.model_comparison && Object.keys(result.model_comparison).length > 0 && (
+          <div className="model-comparison-section">
+            <div className="section-label">All Models Predictions Comparison</div>
+            <div className="model-comparison-grid">
+              {result.model_comparison.naive_bayes && (
+                <div className="model-comparison-item">
+                  <div className="model-comparison-name">
+                    <span className="model-icon">🧠</span>
+                    <span>Naive Bayes</span>
+                  </div>
+                  <div className="model-comparison-result">
+                    <span className="model-category">{result.model_comparison.naive_bayes.category}</span>
+                    <span className="model-confidence">{(result.model_comparison.naive_bayes.confidence * 100).toFixed(1)}%</span>
+                  </div>
+                </div>
+              )}
+              {result.model_comparison.logistic_regression && (
+                <div className="model-comparison-item">
+                  <div className="model-comparison-name">
+                    <span className="model-icon">📈</span>
+                    <span>Logistic Regression</span>
+                  </div>
+                  <div className="model-comparison-result">
+                    <span className="model-category">{result.model_comparison.logistic_regression.category}</span>
+                    <span className="model-confidence">{(result.model_comparison.logistic_regression.confidence * 100).toFixed(1)}%</span>
+                  </div>
+                </div>
+              )}
+              {result.model_comparison.random_forest && (
+                <div className="model-comparison-item">
+                  <div className="model-comparison-name">
+                    <span className="model-icon">🌲</span>
+                    <span>Random Forest</span>
+                  </div>
+                  <div className="model-comparison-result">
+                    <span className="model-category">{result.model_comparison.random_forest.category}</span>
+                    <span className="model-confidence">{(result.model_comparison.random_forest.confidence * 100).toFixed(1)}%</span>
+                  </div>
+                </div>
+              )}
+              {result.model_comparison.gradient_boosting && (
+                <div className="model-comparison-item">
+                  <div className="model-comparison-name">
+                    <span className="model-icon">⚡</span>
+                    <span>Gradient Boosting</span>
+                  </div>
+                  <div className="model-comparison-result">
+                    <span className="model-category">{result.model_comparison.gradient_boosting.category}</span>
+                    <span className="model-confidence">{(result.model_comparison.gradient_boosting.confidence * 100).toFixed(1)}%</span>
+                  </div>
+                </div>
+              )}
+              {result.model_comparison.svm && (
+                <div className="model-comparison-item">
+                  <div className="model-comparison-name">
+                    <span className="model-icon">🎯</span>
+                    <span>SVM</span>
+                  </div>
+                  <div className="model-comparison-result">
+                    <span className="model-category">{result.model_comparison.svm.category}</span>
+                    <span className="model-confidence">{(result.model_comparison.svm.confidence * 100).toFixed(1)}%</span>
+                  </div>
+                </div>
+              )}
+              {result.model_comparison.bert && result.model_comparison.bert.category !== 'N/A' && (
+                <div className="model-comparison-item">
+                  <div className="model-comparison-name">
+                    <span className="model-icon">🤖</span>
+                    <span>BERT</span>
+                  </div>
+                  <div className="model-comparison-result">
+                    <span className="model-category">{result.model_comparison.bert.category}</span>
+                    <span className="model-confidence">{(result.model_comparison.bert.confidence * 100).toFixed(1)}%</span>
+                  </div>
+                </div>
+              )}
+            </div>
+            <div className="model-comparison-note">
+              Final prediction uses ensemble voting from all {Object.keys(result.model_comparison).length} models for maximum accuracy
+            </div>
+          </div>
+        )}
+
         {/* Metrics */}
         <div className="metrics-row">
           <div className="metric-box">

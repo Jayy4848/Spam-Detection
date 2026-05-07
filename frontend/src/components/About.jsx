@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { getModelInfo } from '../services/api';
 
 const TECH = ['Django REST', 'React 18', 'scikit-learn', 'Naive Bayes', 'TF-IDF', 'Logistic Regression', 'Random Forest', 'Gradient Boosting', 'SVM', 'NLTK', 'Python 3.10', 'SQLite'];
 
@@ -16,6 +17,14 @@ const FEATURES = [
 ];
 
 export default function About() {
+  const [modelInfo, setModelInfo] = useState(null);
+
+  useEffect(() => {
+    getModelInfo()
+      .then(data => setModelInfo(data))
+      .catch(err => console.error('Failed to load model info:', err));
+  }, []);
+
   return (
     <div className="about-page">
       <div className="about-hero">
@@ -28,6 +37,39 @@ export default function About() {
           explainable AI, and production-ready architecture.
         </p>
       </div>
+
+      {/* Model Performance Card */}
+      {modelInfo && (
+        <div className="about-card" style={{ marginBottom: '1.25rem', background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%)', border: '2px solid rgba(102, 126, 234, 0.2)' }}>
+          <h3>🤖 Current Model Performance</h3>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginTop: '1rem' }}>
+            <div style={{ textAlign: 'center', padding: '1rem', background: 'white', borderRadius: 'var(--radius)', border: '1px solid var(--border)' }}>
+              <div style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--brand-primary)', marginBottom: '0.25rem' }}>{modelInfo.accuracy}%</div>
+              <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 600 }}>Test Accuracy</div>
+            </div>
+            <div style={{ textAlign: 'center', padding: '1rem', background: 'white', borderRadius: 'var(--radius)', border: '1px solid var(--border)' }}>
+              <div style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--brand-primary)', marginBottom: '0.25rem' }}>{modelInfo.precision}%</div>
+              <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 600 }}>Precision</div>
+            </div>
+            <div style={{ textAlign: 'center', padding: '1rem', background: 'white', borderRadius: 'var(--radius)', border: '1px solid var(--border)' }}>
+              <div style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--brand-primary)', marginBottom: '0.25rem' }}>{modelInfo.recall}%</div>
+              <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 600 }}>Recall</div>
+            </div>
+            <div style={{ textAlign: 'center', padding: '1rem', background: 'white', borderRadius: 'var(--radius)', border: '1px solid var(--border)' }}>
+              <div style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--brand-primary)', marginBottom: '0.25rem' }}>{modelInfo.f1_score}%</div>
+              <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 600 }}>F1-Score</div>
+            </div>
+          </div>
+          <div style={{ marginTop: '1rem', padding: '1rem', background: 'rgba(102, 126, 234, 0.1)', borderRadius: 'var(--radius)', textAlign: 'center' }}>
+            <div style={{ fontSize: '0.95rem', color: 'var(--text-secondary)' }}>
+              <strong style={{ color: 'var(--brand-primary)' }}>Active Model:</strong> {modelInfo.model_name}
+            </div>
+            <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>
+              Cross-validation: {modelInfo.cv_mean}% (±{modelInfo.cv_std}%)
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="about-grid">
         <div className="about-card">
