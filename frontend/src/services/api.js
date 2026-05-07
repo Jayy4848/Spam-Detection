@@ -184,4 +184,9 @@ export const deleteMessage = async (messageId) => {
   return response.data;
 };
 
+export const deleteAllMessages = async () => {
+  const response = await api.delete('/messages/delete-all/');
+  return response.data;
+};
+
 export default api;

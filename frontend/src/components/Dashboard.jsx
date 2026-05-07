@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getStats, resetData, getModelInfo, getRecentMessages, deleteMessage } from '../services/api';
+import { getStats, resetData, getModelInfo, getRecentMessages, deleteMessage, deleteAllMessages } from '../services/api';
 
 const CAT_COLORS = {
   spam: '#ef4444', promotion: '#f59e0b', otp: '#3b82f6',
@@ -18,6 +18,7 @@ export default function Dashboard() {
   const [filterRisk, setFilterRisk] = useState(null);
   const [viewingMessage, setViewingMessage] = useState(null);
   const [deletingId, setDeletingId] = useState(null);
+  const [deletingAll, setDeletingAll] = useState(false);
 
   const loadStats = () => {
     setLoading(true);
@@ -102,6 +103,47 @@ export default function Dashboard() {
     }
   };
 
+  const handleDeleteAll = async () => {
+    if (!window.confirm('⚠️ Are you sure you want to delete ALL messages? This action cannot be undone!')) {
+      return;
+    }
+    
+    // Double confirmation for safety
+    if (!window.confirm('⚠️ FINAL WARNING: This will permanently delete all message records. Continue?')) {
+      return;
+    }
+    
+    setDeletingAll(true);
+    try {
+      const result = await deleteAllMessages();
+      
+      // Clear local state
+      setMessages([]);
+      
+      // Show success message
+      alert(`✅ Successfully deleted ${result.count} messages!`);
+      
+      // Reload stats
+      loadStats();
+    } catch (err) {
+      console.error('Delete all error:', err);
+      
+      let errorMessage = '❌ Failed to delete all messages. ';
+      
+      if (err.error) {
+        errorMessage += err.error;
+      } else if (err.message) {
+        errorMessage += err.message;
+      } else {
+        errorMessage += 'Please try again.';
+      }
+      
+      alert(errorMessage);
+    } finally {
+      setDeletingAll(false);
+    }
+  };
+
   const handleViewMessage = (message) => {
     setViewingMessage(message);
   };
@@ -166,14 +208,47 @@ export default function Dashboard() {
       <div className="page-header">
         <h1>Analytics Dashboard</h1>
         <p>Real-time insights from your SMS analysis history</p>
-        <button 
-          className="btn-reset-data" 
-          onClick={handleReset}
-          disabled={resetting || total === 0}
-          title={total === 0 ? 'No data to reset' : 'Reset all analytics data'}
-        >
-          {resetting ? '🔄 Resetting...' : '🗑️ Reset Data'}
-        </button>
+        <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1rem' }}>
+          <button 
+            className="btn-reset-data" 
+            onClick={handleReset}
+            disabled={resetting || total === 0}
+            title={total === 0 ? 'No data to reset' : 'Reset all analytics data'}
+          >
+            {resetting ? '🔄 Resetting...' : '🗑️ Reset Data'}
+          </button>
+          <button 
+            className="btn-delete-all" 
+            onClick={handleDeleteAll}
+            disabled={deletingAll || messages.length === 0}
+            title={messages.length === 0 ? 'No messages to delete' : 'Delete all messages'}
+            style={{
+              padding: '0.75rem 1.5rem',
+              background: deletingAll ? '#9ca3af' : 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
+              color: 'white',
+              border: 'none',
+              borderRadius: 'var(--radius)',
+              fontWeight: 600,
+              cursor: deletingAll || messages.length === 0 ? 'not-allowed' : 'pointer',
+              fontSize: '0.95rem',
+              boxShadow: '0 2px 8px rgba(239, 68, 68, 0.3)',
+              transition: 'all 0.2s ease',
+              opacity: deletingAll || messages.length === 0 ? 0.6 : 1
+            }}
+            onMouseEnter={(e) => {
+              if (!deletingAll && messages.length > 0) {
+                e.target.style.transform = 'translateY(-2px)';
+                e.target.style.boxShadow = '0 4px 12px rgba(239, 68, 68, 0.4)';
+              }
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.transform = 'translateY(0)';
+              e.target.style.boxShadow = '0 2px 8px rgba(239, 68, 68, 0.3)';
+            }}
+          >
+            {deletingAll ? '🔄 Deleting All...' : '🗑️ Delete All Messages'}
+          </button>
+        </div>
       </div>
 
       {/* Stats */}

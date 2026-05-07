@@ -253,6 +253,56 @@ class SMSClassifier:
             'probabilities': {'personal': 0.70, 'important': 0.20, 'spam': 0.10}
         }
     
+    def _fallback_prediction(self, text):
+        """
+        Fallback prediction when no models are loaded
+        Uses simple keyword-based classification
+        """
+        text_lower = text.lower()
+        
+        # Spam detection
+        spam_keywords = ['win', 'winner', 'prize', 'free', 'click here', 'claim', 'congratulations', 'offer']
+        if any(keyword in text_lower for keyword in spam_keywords):
+            return {
+                'category': 'spam',
+                'confidence': 0.75,
+                'probabilities': {'spam': 0.75, 'promotion': 0.15, 'personal': 0.10}
+            }
+        
+        # OTP detection
+        otp_keywords = ['otp', 'verification code', 'verify', 'code is']
+        if any(keyword in text_lower for keyword in otp_keywords):
+            return {
+                'category': 'otp',
+                'confidence': 0.85,
+                'probabilities': {'otp': 0.85, 'important': 0.10, 'personal': 0.05}
+            }
+        
+        # Promotion detection
+        promo_keywords = ['sale', 'discount', 'offer', 'deal', 'shop']
+        if any(keyword in text_lower for keyword in promo_keywords):
+            return {
+                'category': 'promotion',
+                'confidence': 0.70,
+                'probabilities': {'promotion': 0.70, 'spam': 0.20, 'personal': 0.10}
+            }
+        
+        # Important detection
+        important_keywords = ['bank', 'account', 'payment', 'transaction', 'alert']
+        if any(keyword in text_lower for keyword in important_keywords):
+            return {
+                'category': 'important',
+                'confidence': 0.80,
+                'probabilities': {'important': 0.80, 'otp': 0.10, 'personal': 0.10}
+            }
+        
+        # Default to personal
+        return {
+            'category': 'personal',
+            'confidence': 0.70,
+            'probabilities': {'personal': 0.70, 'important': 0.20, 'spam': 0.10}
+        }
+    
     def predict(self, text, language='en'):
         """
         Predict SMS category using ensemble of all models

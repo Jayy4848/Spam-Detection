@@ -195,7 +195,7 @@ class PredictView(APIView):
             'suspicious_keywords': phishing_result['keywords'],
             'suspicious_urls': phishing_result['urls'],
             'highlighted_words': explanation['highlighted_words'],
-            'model_comparison': classification_result['model_comparison'],
+            'model_comparison': classification_result.get('model_comparison', {}),
             'message_id': str(sms_log.id),
             
             # Advanced features
@@ -542,8 +542,15 @@ class DeleteMessageView(APIView):
     
     def delete(self, request, message_id):
         try:
-            # Find the message
-            message = SMSLog.objects.filter(id=message_id).first()
+            # Find the message - handle both int and UUID
+            try:
+                message = SMSLog.objects.filter(id=message_id).first()
+            except (ValueError, TypeError):
+                # Try converting to int if it's a string number
+                try:
+                    message = SMSLog.objects.filter(id=int(message_id)).first()
+                except:
+                    message = None
             
             if not message:
                 return Response({
@@ -570,5 +577,38 @@ class DeleteMessageView(APIView):
             logger.error(f"Message deletion error: {e}")
             return Response({
                 'status': 'error',
-                'message': 'Failed to delete message'
+                'message': f'Failed to delete message: {str(e)}'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class DeleteAllMessagesView(APIView):
+    """API endpoint to delete all messages"""
+    permission_classes = []  # No authentication required
+    authentication_classes = []  # No authentication required
+    
+    def delete(self, request):
+        try:
+            # Count messages before deletion
+            count = SMSLog.objects.count()
+            
+            # Log the deletion
+            audit_log('all_messages_deleted', request, {
+                'count': count
+            })
+            
+            # Delete all messages
+            SMSLog.objects.all().delete()
+            
+            return Response({
+                'status': 'success',
+                'message': f'Successfully deleted {count} messages',
+                'count': count
+            }, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            logger.error(f"Delete all messages error: {e}")
+            return Response({
+                'status': 'error',
+                'message': 'Failed to delete messages'
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
