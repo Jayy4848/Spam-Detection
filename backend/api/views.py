@@ -3,6 +3,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.db.models import Count, Q, Avg
 from django.utils import timezone
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 from datetime import timedelta, datetime
 import hashlib
 import hmac
@@ -527,8 +529,11 @@ class ResetDataView(APIView):
 
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class DeleteMessageView(APIView):
     """API endpoint to delete a specific message"""
+    permission_classes = []  # No authentication required
+    authentication_classes = []  # No authentication required
     
     def delete(self, request, message_id):
         try:

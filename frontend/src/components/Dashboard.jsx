@@ -84,7 +84,19 @@ export default function Dashboard() {
       loadStats();
     } catch (err) {
       console.error('Delete error:', err);
-      alert('❌ Failed to delete message. Please try again.');
+      
+      // Show more specific error message
+      let errorMessage = '❌ Failed to delete message. ';
+      
+      if (err.error) {
+        errorMessage += err.error;
+      } else if (err.message) {
+        errorMessage += err.message;
+      } else {
+        errorMessage += 'Please try again.';
+      }
+      
+      alert(errorMessage);
     } finally {
       setDeletingId(null);
     }

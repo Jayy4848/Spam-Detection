@@ -173,11 +173,14 @@ export const getRecentMessages = async (params = {}) => {
 };
 
 export const deleteMessage = async (messageId) => {
-  if (!messageId || typeof messageId !== 'number') {
+  // Convert to number if it's a string
+  const id = typeof messageId === 'string' ? parseInt(messageId, 10) : messageId;
+  
+  if (!id || isNaN(id) || id <= 0) {
     throw new Error('Invalid message ID');
   }
   
-  const response = await api.delete(`/messages/${messageId}/`);
+  const response = await api.delete(`/messages/${id}/`);
   return response.data;
 };
 
