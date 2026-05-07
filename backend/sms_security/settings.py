@@ -180,7 +180,7 @@ if DEBUG:
 
 CORS_ALLOWED_ORIGINS = list(set(_cors_origins))
 CORS_ALLOW_CREDENTIALS = False
-CORS_ALLOW_METHODS = ['GET', 'POST', 'OPTIONS']
+CORS_ALLOW_METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
 CORS_ALLOW_HEADERS = [
     'accept', 'accept-encoding', 'content-type',
     'origin', 'x-requested-with', 'x-api-key', 'x-request-id',
