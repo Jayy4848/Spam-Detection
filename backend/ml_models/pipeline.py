@@ -50,6 +50,8 @@ class TextPreprocessor:
         if not isinstance(text, str):
             return ""
         
+        original_text = text
+        
         # Replace URLs with token
         text = self.url_pattern.sub(' URL_TOKEN ', text)
         
@@ -59,8 +61,36 @@ class TextPreprocessor:
         # Replace emails with token
         text = self.email_pattern.sub(' EMAIL_TOKEN ', text)
         
-        # Replace numbers with token
+        # Replace numbers with token (but keep the count)
         text = self.number_pattern.sub(' NUM_TOKEN ', text)
+        
+        # Detect urgency words
+        urgency_words = ['urgent', 'immediately', 'now', 'hurry', 'limited', 'expires', 'act now', 'last chance']
+        for word in urgency_words:
+            if word in text.lower():
+                text += ' URGENCY_TOKEN '
+        
+        # Detect financial terms
+        financial_terms = ['prize', 'winner', 'won', 'free', 'cash', 'money', 'rupees', 'rs', '$', '₹', 'claim', 'reward']
+        for term in financial_terms:
+            if term in text.lower():
+                text += ' FINANCIAL_TOKEN '
+        
+        # Detect action words
+        action_words = ['click', 'call', 'verify', 'confirm', 'update', 'send', 'reply']
+        for word in action_words:
+            if word in text.lower():
+                text += ' ACTION_TOKEN '
+        
+        # Detect excessive punctuation (spam indicator)
+        if text.count('!') > 1:
+            text += ' EXCLAMATION_TOKEN '
+        
+        # Detect all caps words (spam indicator)
+        words = original_text.split()
+        caps_count = sum(1 for word in words if word.isupper() and len(word) > 2)
+        if caps_count > 0:
+            text += ' CAPS_TOKEN ' * caps_count
         
         # Remove extra whitespace
         text = ' '.join(text.split())
@@ -99,28 +129,61 @@ class SMSClassificationPipeline:
         self.preprocessor = TextPreprocessor()
         self.label_encoder = LabelEncoder()
         
-        # Model configurations
+        # Model configurations - Optimized for small dataset (prevent overfitting)
         self.models = {
-            'naive_bayes': MultinomialNB(alpha=0.1),
-            'logistic_regression': LogisticRegression(max_iter=1000, C=1.0),
-            'random_forest': RandomForestClassifier(n_estimators=100, max_depth=20, random_state=42),
-            'gradient_boosting': GradientBoostingClassifier(n_estimators=100, learning_rate=0.1, random_state=42),
-            'svm': LinearSVC(C=1.0, max_iter=1000, random_state=42)
+            'naive_bayes': MultinomialNB(alpha=0.5),  # Increased smoothing to prevent overfitting
+            'logistic_regression': LogisticRegression(
+                max_iter=1000,
+                C=0.5,  # More regularization to prevent overfitting
+                solver='lbfgs',
+                penalty='l2',
+                class_weight='balanced',
+                random_state=42
+            ),
+            'random_forest': RandomForestClassifier(
+                n_estimators=50,  # Reduced to prevent overfitting
+                max_depth=10,  # Reduced depth
+                min_samples_split=5,  # Increased to prevent overfitting
+                min_samples_leaf=2,  # Increased to prevent overfitting
+                max_features='sqrt',
+                class_weight='balanced',
+                random_state=42,
+                n_jobs=-1
+            ),
+            'gradient_boosting': GradientBoostingClassifier(
+                n_estimators=50,  # Reduced
+                learning_rate=0.1,
+                max_depth=3,  # Reduced depth
+                min_samples_split=5,  # Increased
+                subsample=0.8,
+                random_state=42
+            ),
+            'svm': LinearSVC(
+                C=0.5,  # More regularization
+                max_iter=1000,
+                class_weight='balanced',
+                dual=False,
+                random_state=42
+            )
         }
         
         self.vectorizers = {
             'tfidf': TfidfVectorizer(
-                max_features=5000,
-                ngram_range=(1, 3),
-                min_df=2,
-                max_df=0.95,
-                sublinear_tf=True
+                max_features=3000,  # Reduced to prevent overfitting on small dataset
+                ngram_range=(1, 2),  # Reduced from (1, 4)
+                min_df=1,
+                max_df=0.85,  # More aggressive filtering
+                sublinear_tf=True,
+                use_idf=True,
+                smooth_idf=True,
+                norm='l2'
             ),
             'count': CountVectorizer(
-                max_features=5000,
+                max_features=3000,  # Reduced
                 ngram_range=(1, 2),
-                min_df=2,
-                max_df=0.95
+                min_df=1,
+                max_df=0.85,
+                binary=False
             )
         }
         

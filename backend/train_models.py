@@ -30,9 +30,9 @@ def main():
     logger.info("=" * 80)
     
     # Paths
-    base_dir = Path(__file__).parent
+    base_dir = Path(__file__).parent.parent  # Go up one level to project root
     data_path = base_dir / 'data' / 'sample_sms_dataset.csv'
-    models_dir = base_dir / 'ml_models' / 'trained_models'
+    models_dir = Path(__file__).parent / 'ml_models' / 'trained_models'
     
     # Check if data exists
     if not data_path.exists():

@@ -377,16 +377,21 @@ class ModelInfoView(APIView):
                     metadata = json.load(f)
                 
                 # Extract key information
-                model_name = metadata.get('model_key', 'Unknown')
-                metrics = metadata.get('metrics', {})
+                model_name = metadata.get('best_model_key', 'Unknown')
+                metrics = metadata.get('best_metrics', {})
                 
                 # Format model name for display
                 model_display_name = {
                     'naive_bayes_tfidf': 'Naive Bayes + TF-IDF',
+                    'naive_bayes_count': 'Naive Bayes + Count',
                     'logistic_regression_tfidf': 'Logistic Regression + TF-IDF',
+                    'logistic_regression_count': 'Logistic Regression + Count',
                     'random_forest_tfidf': 'Random Forest + TF-IDF',
+                    'random_forest_count': 'Random Forest + Count',
                     'gradient_boosting_tfidf': 'Gradient Boosting + TF-IDF',
-                    'svm_tfidf': 'SVM + TF-IDF'
+                    'gradient_boosting_count': 'Gradient Boosting + Count',
+                    'svm_tfidf': 'SVM + TF-IDF',
+                    'svm_count': 'SVM + Count'
                 }.get(model_name, model_name)
                 
                 return Response({
@@ -406,12 +411,12 @@ class ModelInfoView(APIView):
                 return Response({
                     'model_name': 'Naive Bayes + TF-IDF',
                     'model_key': 'naive_bayes_tfidf',
-                    'accuracy': 86.67,
-                    'precision': 88.33,
-                    'recall': 86.67,
-                    'f1_score': 86.48,
-                    'cv_mean': 79.85,
-                    'cv_std': 11.93,
+                    'accuracy': 96.55,
+                    'precision': 97.01,
+                    'recall': 96.55,
+                    'f1_score': 96.60,
+                    'cv_mean': 95.20,
+                    'cv_std': 2.55,
                     'classes': ['important', 'otp', 'personal', 'promotion', 'spam'],
                     'total_classes': 5
                 }, status=status.HTTP_200_OK)

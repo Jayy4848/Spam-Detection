@@ -9,6 +9,36 @@ message,category
 "Congratulations! You won 10 lakh rupees. Send your details now",spam
 "URGENT ACTION REQUIRED: Update your KYC details immediately",spam
 "Your account has been compromised. Click here to secure it",spam
+"ALERT! You have won 1 crore rupees in lucky draw. Call now!",spam
+"FREE iPhone 15 Pro Max! Limited stock. Click to claim yours now!",spam
+"CONGRATULATIONS! You are our 1000th visitor. Claim your reward!",spam
+"Your package is waiting. Pay Rs.99 delivery fee to receive it",spam
+"URGENT: Your Netflix account will expire. Update payment now!",spam
+"You have been selected for a government grant of Rs.50000",spam
+"WINNER WINNER! Claim your casino bonus of $5000 now!",spam
+"Your Amazon account is on hold. Verify immediately or lose access",spam
+"BREAKING: You qualified for a personal loan of Rs.10 lakh!",spam
+"Act now! Your special discount code expires in 1 hour!",spam
+"FINAL NOTICE: Your warranty is expiring. Renew now to save!",spam
+"You won a free vacation to Dubai! Click here to book now!",spam
+"URGENT: Suspicious activity on your account. Verify identity now!",spam
+"Congratulations! You've been approved for a credit card with 5L limit",spam
+"FREE MONEY! Get Rs.1000 cashback on your first transaction!",spam
+"Your parcel is stuck in customs. Pay Rs.500 to release it now",spam
+"LAST CHANCE! Claim your lottery winnings before midnight!",spam
+"You have 1 unread message from your bank. Click to view now",spam
+"ALERT: Your phone number won Rs.25000 in lucky draw!",spam
+"Exclusive offer! Get rich quick with our investment scheme!",spam
+"Your credit score is 850! Claim pre-approved loan now!",spam
+"URGENT: Your Aadhaar card will be blocked. Update KYC immediately",spam
+"You are eligible for Rs.2 lakh instant loan. Apply now!",spam
+"WINNER! You won a brand new car! Send details to claim",spam
+"Your account has suspicious login. Click here to secure it",spam
+"FREE GIFT CARD worth Rs.5000! Limited time offer!",spam
+"CONGRATULATIONS! You won iPhone 15 in our mega contest!",spam
+"Your package delivery failed. Pay redelivery fee of Rs.150",spam
+"URGENT: Your PAN card is deactivated. Reactivate now!",spam
+"You have been selected for work from home job. Earn 50k/month!",spam
 "50% off on all items this weekend! Shop now at our store.",promotion
 "Exclusive deal: Buy 1 Get 1 free. Visit our website today.",promotion
 "Flash sale! Up to 70% discount on electronics. Don't miss out!",promotion
@@ -19,6 +49,26 @@ message,category
 "Get extra 15% off on your first order. Use code: FIRST15",promotion
 "Weekend special: Buy 2 Get 1 free on all categories",promotion
 "Exclusive discount for you! Save big on your favorite brands",promotion
+"Summer sale is here! Flat 50% off on all clothing items",promotion
+"Diwali special: Get 30% cashback on all purchases above Rs.1000",promotion
+"New year sale! Up to 60% discount on electronics and appliances",promotion
+"Clearance sale! Everything must go! Upto 70% off",promotion
+"Black Friday deals! Massive discounts on all products",promotion
+"Monsoon sale: Buy 3 Get 2 free on selected items",promotion
+"Republic Day offer: Flat Rs.500 off on orders above Rs.2000",promotion
+"Independence Day sale! Celebrate with 40% off storewide",promotion
+"Valentine's Day special: 25% off on gifts and flowers",promotion
+"Back to school sale! 35% off on bags, books and stationery",promotion
+"Festive season offer: Extra 20% off on already discounted items",promotion
+"End of season sale! Clear stock at 60% discount",promotion
+"Cyber Monday deals! Online exclusive discounts up to 50%",promotion
+"Mother's Day special: 30% off on jewelry and cosmetics",promotion
+"Father's Day sale: 25% discount on watches and accessories",promotion
+"Christmas sale! Spread joy with 40% off on all gifts",promotion
+"New arrivals! Get 15% off on latest collection",promotion
+"Member exclusive: Extra 10% off for loyalty card holders",promotion
+"App only offer: Flat 20% discount on first app purchase",promotion
+"Refer a friend and get Rs.200 cashback on next order",promotion
 "Your OTP is 123456. Valid for 10 minutes. Do not share.",otp
 "Verification code: 789012. Use this to complete your login.",otp
 "Your security code is 456789. Enter this to verify your account.",otp
@@ -29,6 +79,26 @@ message,category
 "Your OTP for payment is 901234. Enter within 10 minutes.",otp
 "Security code: 678901. Use this to complete verification.",otp
 "Your authentication code is 112233. Valid for 5 minutes only.",otp
+"OTP: 445566. Use this code to verify your mobile number.",otp
+"Your verification code is 778899. Do not share with anyone.",otp
+"Login OTP: 998877. This code will expire in 3 minutes.",otp
+"Your OTP for password reset is 665544. Valid for 10 minutes.",otp
+"Transaction verification code: 332211. Enter to confirm payment.",otp
+"Your security OTP is 887766. Use within 5 minutes.",otp
+"Verification code for registration: 554433. Do not share.",otp
+"Your OTP is 221100. Required to complete your order.",otp
+"Authentication code: 009988. Valid for 15 minutes only.",otp
+"Your one-time code is 776655. Use to verify your email.",otp
+"OTP for app login: 443322. This code expires in 10 minutes.",otp
+"Your verification OTP is 110099. Do not share with anyone.",otp
+"Security code for withdrawal: 998866. Valid for 5 minutes.",otp
+"Your OTP is 775533. Use this to confirm your booking.",otp
+"Login verification code: 224466. Expires in 10 minutes.",otp
+"Your OTP for KYC verification is 886644. Valid for 15 minutes.",otp
+"Transaction OTP: 335577. Enter to authorize payment.",otp
+"Your security code is 991122. Use within 5 minutes.",otp
+"Verification OTP: 668800. Required to update your profile.",otp
+"Your authentication OTP is 447799. Valid for 10 minutes.",otp
 "Your bank account has been debited Rs. 5000. Balance: Rs. 15000.",important
 "Payment of Rs. 2500 received in your account. Thank you.",important
 "Alert: Your credit card bill of Rs. 8000 is due on 15th.",important
@@ -39,6 +109,26 @@ message,category
 "Alert: Unusual activity detected in your account. Contact us immediately.",important
 "Your flight booking is confirmed. PNR: ABC123. Check-in opens 24hrs before.",important
 "Appointment reminder: Doctor visit scheduled for tomorrow at 10 AM.",important
+"Your electricity bill of Rs. 1500 is due on 25th. Pay to avoid disconnection.",important
+"Reminder: Your car insurance expires on 30th. Renew now.",important
+"Your credit card payment of Rs. 5000 has been received. Thank you.",important
+"Alert: Your account balance is below minimum. Maintain Rs. 5000 to avoid charges.",important
+"Your mutual fund SIP of Rs. 3000 has been processed successfully.",important
+"Reminder: Your passport expires in 6 months. Apply for renewal.",important
+"Your train ticket is confirmed. PNR: XYZ789. Journey date: 20th Jan.",important
+"Alert: Your FD of Rs. 100000 matures on 15th. Choose renewal option.",important
+"Your exam admit card is ready. Download from official website.",important
+"Reminder: Your vehicle registration renewal is due next month.",important
+"Your salary of Rs. 50000 has been credited to your account.",important
+"Alert: Your debit card will expire on 31st. New card dispatched.",important
+"Your hotel booking is confirmed. Check-in: 15th Jan. Booking ID: HTL123.",important
+"Reminder: Your health checkup is scheduled for 10th at 9 AM.",important
+"Your tax refund of Rs. 8000 has been processed. Expect credit in 7 days.",important
+"Alert: Your mobile plan expires tomorrow. Recharge to continue services.",important
+"Your courier has been dispatched. Track with AWB: 1234567890.",important
+"Reminder: Your gym membership expires on 31st. Renew to continue.",important
+"Your scholarship application has been approved. Amount: Rs. 25000.",important
+"Alert: Your domain name expires in 15 days. Renew to avoid loss.",important
 "Hi! How are you? Let's meet for coffee tomorrow.",personal
 "Thanks for your help yesterday. Really appreciate it!",personal
 "Can you call me when you're free? Need to discuss something.",personal
@@ -48,6 +138,27 @@ message,category
 "Thanks for the gift! It was really thoughtful of you.",personal
 "Let me know when you reach home safely.",personal
 "Good morning! Have a great day ahead!",personal
+"Are you free this weekend? Let's plan something fun.",personal
+"Congratulations on your new job! So proud of you!",personal
+"Get well soon! Take care of yourself.",personal
+"Happy anniversary! Wishing you many more years of happiness.",personal
+"Thanks for being such a great friend. You're the best!",personal
+"Good luck for your exam tomorrow! You'll do great!",personal
+"Hey! Long time no see. How have you been?",personal
+"Can you pick up some groceries on your way home?",personal
+"I'm running late. Will reach in 15 minutes.",personal
+"Thanks for the dinner last night. Had a great time!",personal
+"Happy New Year! Wishing you success and happiness.",personal
+"Congratulations on your wedding! Best wishes for your future.",personal
+"Miss our college days! Let's plan a reunion soon.",personal
+"Thanks for your support during tough times. Means a lot.",personal
+"Good night! Sweet dreams!",personal
+"Are you watching the match tonight? Let's catch up.",personal
+"Happy Diwali! May this festival bring joy and prosperity.",personal
+"Thanks for the birthday wishes! Had an amazing day.",personal
+"Can you share the notes from today's class?",personal
+"I'm at the mall. Do you need anything?",personal
+"Congratulations on your promotion! Well deserved!",personal
 "See you at the meeting tomorrow. Take care!",personal
 "Aapka account band ho jayega. Turant KYC update kare.",spam
 "Badhai ho! Aapne lottery jeet li hai. Abhi claim kare.",spam
@@ -74,3 +185,103 @@ message,category
 "Free ho to call karna. Baat karni hai.",personal
 "Happy birthday! Enjoy your special day!",personal
 "Miss you! Kab aa rahe ho wapas?",personal
+"Verify your identity now or account will be locked permanently",spam
+"You have unclaimed rewards worth Rs.50000. Claim before expiry",spam
+"FINAL WARNING: Your subscription will be cancelled. Renew now!",spam
+"Congratulations! You are pre-approved for Rs.5L loan instantly",spam
+"Your parcel delivery failed. Click link to reschedule delivery",spam
+"URGENT: Tax refund of Rs.15000 pending. Claim within 24 hours",spam
+"You won a free trip to Goa! Book now before slots fill up!",spam
+"Your mobile number won Rs.1 lakh in lucky draw. Call to claim",spam
+"ALERT: Suspicious login detected. Verify your account immediately",spam
+"Get instant personal loan up to 10 lakhs. Apply now!",spam
+"Your credit card is blocked. Update details to unblock now",spam
+"Exclusive membership offer! Join now and get Rs.10000 bonus",spam
+"Your package is held at customs. Pay Rs.299 to release it",spam
+"CONGRATULATIONS! You qualified for government subsidy of Rs.25000",spam
+"Limited slots! Work from home and earn Rs.50000 per month",spam
+"Your bank account will be closed. Update KYC within 48 hours",spam
+"You have been selected for free health insurance worth Rs.5L",spam
+"URGENT: Your electricity will be disconnected. Pay Rs.500 now",spam
+"Win iPhone 15 Pro! Click here to participate in contest",spam
+"Your Aadhaar is linked to suspicious activity. Verify now",spam
+"Get flat 60% off on all electronics. Limited period offer!",promotion
+"Diwali bonanza! Buy 1 Get 1 free on all products",promotion
+"Exclusive app launch offer: Extra 25% cashback on first order",promotion
+"Clearance sale! Everything at 70% discount. Shop now!",promotion
+"Weekend special: Free delivery on orders above Rs.500",promotion
+"New year mega sale! Up to 80% off on fashion and lifestyle",promotion
+"Flash deal! Grab your favorite products at half price",promotion
+"Festive season offer: Flat Rs.1000 off on orders above Rs.3000",promotion
+"Limited time: Buy 3 Get 2 free on all categories",promotion
+"Super saver sale! Minimum 40% off on all items",promotion
+"App exclusive: Extra 15% discount for first time users",promotion
+"Monsoon sale is live! Upto 50% off on clothing",promotion
+"Republic Day special: Flat 26% off on all products",promotion
+"Valentine's week sale! 30% off on gifts and flowers",promotion
+"Summer collection launch! Get 20% off on new arrivals",promotion
+"Cyber Monday deals! Online exclusive 45% discount",promotion
+"Mother's Day special: 35% off on jewelry and cosmetics",promotion
+"Back to school sale! 40% discount on bags and stationery",promotion
+"Christmas mega sale! Spread joy with 50% off",promotion
+"End of season clearance! Upto 75% off on winter wear",promotion
+"Your OTP for login is 334455. Valid for 10 minutes only.",otp
+"Verification code: 667788. Use to complete registration.",otp
+"Your security OTP is 990011. Do not share with anyone.",otp
+"Transaction OTP: 223344. Enter to authorize payment.",otp
+"Your authentication code is 556677. Valid for 5 minutes.",otp
+"OTP for password reset: 889900. Expires in 15 minutes.",otp
+"Your verification code is 112244. Use to verify email.",otp
+"Login OTP: 445566. This code will expire in 10 minutes.",otp
+"Your OTP is 778899. Required to complete your booking.",otp
+"Security code: 001122. Use within 5 minutes to proceed.",otp
+"Your one-time password is 334466. Valid for 10 minutes.",otp
+"Verification OTP: 667799. Do not share this code.",otp
+"Your OTP for withdrawal is 990022. Valid for 5 minutes.",otp
+"Authentication code: 223355. Required to access account.",otp
+"Your OTP is 556688. Use this to confirm your order.",otp
+"Transaction verification code: 889911. Enter to proceed.",otp
+"Your security OTP is 112255. Expires in 10 minutes.",otp
+"OTP for KYC verification: 445577. Valid for 15 minutes.",otp
+"Your verification code is 778800. Use to update profile.",otp
+"Login authentication OTP: 001133. Valid for 5 minutes.",otp
+"Your debit card transaction of Rs.3500 at Flipkart is successful.",important
+"Credit alert: Rs.15000 credited to your account. Balance: Rs.45000.",important
+"Your credit card bill of Rs.12000 is due on 20th. Pay to avoid charges.",important
+"Reminder: Your insurance premium of Rs.8000 is due on 25th.",important
+"Your mutual fund investment of Rs.5000 has been processed.",important
+"Alert: Your FD of Rs.200000 matures on 30th. Choose renewal option.",important
+"Your loan EMI of Rs.15000 has been debited. Next due: 15th next month.",important
+"Transaction alert: Rs.2500 withdrawn from ATM. Balance: Rs.18000.",important
+"Your salary of Rs.65000 has been credited to your account.",important
+"Reminder: Your car insurance expires on 15th. Renew to avoid lapse.",important
+"Your electricity bill of Rs.2500 is due on 28th. Pay online.",important
+"Alert: Your account balance is below Rs.5000. Maintain minimum balance.",important
+"Your train ticket booking is confirmed. PNR: DEF456. Journey: 25th Jan.",important
+"Reminder: Your passport expires in 3 months. Apply for renewal.",important
+"Your flight booking is confirmed. PNR: GHI789. Check-in opens 24hrs before.",important
+"Alert: Your debit card expires on 31st. New card will be dispatched.",important
+"Your exam hall ticket is ready. Download from official website.",important
+"Reminder: Your vehicle fitness certificate expires next month.",important
+"Your tax payment of Rs.25000 has been received. Receipt sent via email.",important
+"Alert: Your mobile recharge expires tomorrow. Recharge to continue.",important
+"Good morning! Hope you have a wonderful day ahead!",personal
+"Are you free this evening? Let's catch up over dinner.",personal
+"Thanks for yesterday! Had a great time with you.",personal
+"Happy birthday dear! Wishing you all the happiness in the world.",personal
+"Miss you so much! When are you coming to visit?",personal
+"Hey! Are you coming to the wedding next week?",personal
+"Thanks for the lovely gift! It was so thoughtful of you.",personal
+"Please call me when you're free. Need to discuss something important.",personal
+"Good night! Sleep well and sweet dreams!",personal
+"Congratulations on your new house! So happy for you!",personal
+"Get well soon! Take rest and take care of yourself.",personal
+"Happy anniversary! Wishing you many more years of togetherness.",personal
+"Thanks for being there for me. You're an amazing friend!",personal
+"All the best for your interview tomorrow! You'll rock it!",personal
+"Hey! Long time no chat. How have you been doing?",personal
+"Can you pick up milk on your way home? We're out of it.",personal
+"Running 20 minutes late. Start without me, I'll join soon.",personal
+"Thanks for the wonderful dinner party! Everything was delicious.",personal
+"Happy Holi! May your life be filled with colors of joy.",personal
+"Congratulations on your baby! So excited to meet the little one!",personal

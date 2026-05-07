@@ -254,6 +254,83 @@ class SMSClassifier:
         }
     
     def predict(self, text, language='en'):
+        """
+        Predict SMS category using ensemble of all models
+        Returns prediction with confidence scores from all models
+        """
+        if not self.models:
+            return self._fallback_prediction(text)
+        
+        # Preprocess text
+        processed_text = self.preprocess_text(text, language)
+        
+        # Get predictions from all models
+        all_predictions = {}
+        all_probabilities = {}
+        
+        for model_name, model in self.models.items():
+            try:
+                # Get prediction
+                pred = model.predict([processed_text])[0]
+                
+                # Get probability if available
+                if hasattr(model.named_steps['classifier'], 'predict_proba'):
+                    proba = model.predict_proba([processed_text])[0]
+                    all_probabilities[model_name] = proba
+                elif hasattr(model.named_steps['classifier'], 'decision_function'):
+                    # For SVM, convert decision function to probabilities
+                    decision = model.decision_function([processed_text])[0]
+                    # Softmax to convert to probabilities
+                    exp_scores = np.exp(decision - np.max(decision))
+                    proba = exp_scores / exp_scores.sum()
+                    all_probabilities[model_name] = proba
+                else:
+                    # Create one-hot probability
+                    proba = np.zeros(len(self.label_encoder.classes_))
+                    proba[pred] = 1.0
+                    all_probabilities[model_name] = proba
+                
+                all_predictions[model_name] = pred
+                
+            except Exception as e:
+                print(f"Error with model {model_name}: {e}")
+                continue
+        
+        if not all_predictions:
+            return self._fallback_prediction(text)
+        
+        # Ensemble voting: Average probabilities from all models
+        avg_probabilities = np.mean(list(all_probabilities.values()), axis=0)
+        
+        # Get final prediction (class with highest average probability)
+        final_prediction = np.argmax(avg_probabilities)
+        final_confidence = float(avg_probabilities[final_prediction])
+        
+        # Get category name
+        if self.label_encoder:
+            category = self.label_encoder.inverse_transform([final_prediction])[0]
+        else:
+            category = str(final_prediction)
+        
+        # Prepare individual model predictions for comparison
+        model_predictions = {}
+        for model_name, pred_idx in all_predictions.items():
+            if self.label_encoder:
+                pred_category = self.label_encoder.inverse_transform([pred_idx])[0]
+            else:
+                pred_category = str(pred_idx)
+            
+            model_predictions[model_name] = {
+                'category': pred_category,
+                'confidence': float(all_probabilities[model_name][pred_idx])
+            }
+        
+        return {
+            'category': category,
+            'confidence': final_confidence,
+            'model_predictions': model_predictions,
+            'ensemble_method': 'average_probability'
+        }
         """Predict SMS category using ensemble of all models"""
         # Preprocess
         processed_text = self.preprocess_text(text, language)
