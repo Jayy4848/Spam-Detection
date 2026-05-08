@@ -1,0 +1,96 @@
+================================================================================
+⚡ QUICK START - SMS Security Assistant
+================================================================================
+
+🎯 GOAL: Get the app running in 5 minutes!
+
+================================================================================
+STEP 1: BACKEND (Terminal 1)
+================================================================================
+
+cd backend
+python -m venv venv
+venv\Scripts\activate                    # Windows
+# OR
+source venv/bin/activate                 # Mac/Linux
+
+pip install -r requirements.txt
+python -c "import nltk; nltk.download('punkt'); nltk.download('stopwords'); nltk.download('vader_lexicon')"
+python manage.py migrate
+python manage.py runserver
+
+✅ Backend running at: http://localhost:8000
+
+================================================================================
+STEP 2: FRONTEND (Terminal 2 - New Window)
+================================================================================
+
+cd frontend
+npm install
+npm start
+
+✅ Frontend running at: http://localhost:3000
+
+================================================================================
+STEP 3: TEST IT!
+================================================================================
+
+1. Browser opens automatically to http://localhost:3000
+2. Enter test message: "Congratulations! You won $1000"
+3. Click "Analyze Message"
+4. See the spam detection result!
+
+================================================================================
+🎉 DONE! Your app is running!
+================================================================================
+
+WHAT'S RUNNING:
+- Backend API: http://localhost:8000
+- Frontend UI: http://localhost:3000
+
+TO STOP:
+- Press Ctrl+C in both terminals
+
+NEED HELP?
+- Read: HOW_TO_RUN_PROJECT.md (detailed guide)
+- Check: Browser console (F12) for errors
+- Verify: http://localhost:8000/api/health/
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+❌ "Port already in use"
+   → Kill the process or use different port
+
+❌ "Module not found"
+   → Make sure you ran pip install / npm install
+
+❌ "Cannot connect to backend"
+   → Make sure backend is running on port 8000
+
+❌ "NLTK data not found"
+   → Run: python -c "import nltk; nltk.download('all')"
+
+================================================================================
+FEATURES TO TRY
+================================================================================
+
+✅ Home Page:
+   - Analyze SMS messages
+   - See detailed classification
+   - View all 5 ML model predictions
+
+✅ Dashboard:
+   - View statistics
+   - See message history
+   - Click eye icon to view details
+   - Click trash icon to delete
+
+✅ About Page:
+   - View model accuracy
+   - See technology stack
+
+================================================================================
+STATUS: Ready to run! Follow the 3 steps above. ⬆️
+================================================================================

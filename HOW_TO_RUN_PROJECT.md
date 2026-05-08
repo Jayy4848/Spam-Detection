@@ -1,404 +1,277 @@
-# 🚀 How to Run TextGuard AI - SMS Security System
+# 🚀 How to Run the SMS Security Assistant Project
 
-## 📋 Prerequisites
+## Quick Start (5 Minutes)
 
-Before running the project, make sure you have:
-
-- **Python 3.8+** installed
-- **Node.js 14+** and npm installed
-- **Git** (if cloning from repository)
+### Prerequisites
+- Python 3.11+ installed
+- Node.js 18+ installed
+- Git installed
 
 ---
 
-## 🔧 Setup Instructions
+## Step 1: Clone the Project (if not already done)
 
-### **Step 1: Install Backend Dependencies**
+```bash
+git clone <your-repo-url>
+cd <project-folder>
+```
 
-Open a terminal and navigate to the backend folder:
+---
 
+## Step 2: Setup Backend (Django API)
+
+### 2.1 Navigate to Backend
 ```bash
 cd backend
 ```
 
-**Option A: Using Virtual Environment (Recommended)**
+### 2.2 Create Virtual Environment
 ```bash
-# Create virtual environment
+# Windows
 python -m venv venv
-
-# Activate virtual environment
-# On Windows:
 venv\Scripts\activate
-# On Mac/Linux:
-source venv/bin/activate
 
-# Install dependencies
-pip install -r requirements.txt
+# Mac/Linux
+python3 -m venv venv
+source venv/bin/activate
 ```
 
-**Option B: Without Virtual Environment**
+### 2.3 Install Dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
----
+### 2.4 Download NLTK Data (Required for ML)
+```bash
+python -c "import nltk; nltk.download('punkt'); nltk.download('stopwords'); nltk.download('vader_lexicon')"
+```
 
-### **Step 2: Setup Database**
-
-Run database migrations:
-
+### 2.5 Run Database Migrations
 ```bash
 python manage.py migrate
 ```
 
-Expected output:
-```
-Operations to perform:
-  Apply all migrations: admin, api, auth, contenttypes, sessions
-Running migrations:
-  Applying contenttypes.0001_initial... OK
-  Applying auth.0001_initial... OK
-  ...
-```
-
----
-
-### **Step 3: Train ML Models** (Already done, but if needed)
-
+### 2.6 (Optional) Create Admin User
 ```bash
-python train_models.py
+python manage.py createsuperuser
 ```
 
-This will:
-- Load the dataset (286 samples)
-- Train 10 model combinations
-- Save the best model (96.55% accuracy)
-- Takes ~2-3 minutes
-
----
-
-### **Step 4: Start Backend Server**
-
+### 2.7 Start Backend Server
 ```bash
 python manage.py runserver
 ```
 
-Expected output:
-```
-Django version 4.x.x, using settings 'sms_security.settings'
-Starting development server at http://127.0.0.1:8000/
-Quit the server with CTRL-BREAK.
-```
+✅ **Backend is now running at: http://localhost:8000**
 
-✅ **Backend is now running on http://localhost:8000**
-
-**Keep this terminal open!**
+Test it: Open http://localhost:8000/api/health/ in your browser
 
 ---
 
-### **Step 5: Install Frontend Dependencies**
+## Step 3: Setup Frontend (React)
 
-Open a **NEW terminal** (keep backend running) and navigate to frontend:
+### 3.1 Open New Terminal
+Keep the backend running, open a **new terminal window**
 
+### 3.2 Navigate to Frontend
 ```bash
 cd frontend
 ```
 
-Install dependencies:
-
+### 3.3 Install Dependencies
 ```bash
 npm install
 ```
 
-This will install React and all required packages (~2-3 minutes).
-
----
-
-### **Step 6: Start Frontend Server**
-
+### 3.4 Start Frontend Server
 ```bash
 npm start
 ```
 
-Expected output:
-```
-Compiled successfully!
-
-You can now view frontend in the browser.
-
-  Local:            http://localhost:3000
-  On Your Network:  http://192.168.x.x:3000
-```
-
-✅ **Frontend is now running on http://localhost:3000**
+✅ **Frontend is now running at: http://localhost:3000**
 
 Your browser should automatically open to http://localhost:3000
 
 ---
 
-## 🎯 Quick Start (All-in-One)
+## 🎉 You're Done!
 
-### **Terminal 1: Backend**
+The application is now running:
+- **Frontend**: http://localhost:3000 (User Interface)
+- **Backend**: http://localhost:8000 (API Server)
+
+---
+
+## 📱 How to Use the App
+
+### 1. Home Page
+- Enter an SMS message in the text box
+- Select language (English, Hindi, Marathi)
+- Click "Analyze Message"
+- View the detailed analysis results
+
+### 2. Dashboard
+- View statistics and analytics
+- See all analyzed messages in a table
+- Click the eye icon to view message details
+- Click the trash icon to delete messages
+- Use filters to sort by category or risk level
+
+### 3. About Page
+- Learn about the technology stack
+- View model information and accuracy
+
+---
+
+## 🛠️ Troubleshooting
+
+### Backend Issues
+
+**Error: "No module named 'django'"**
 ```bash
+# Make sure virtual environment is activated
 cd backend
-python -m venv venv
 venv\Scripts\activate  # Windows
+source venv/bin/activate  # Mac/Linux
+
+# Reinstall dependencies
 pip install -r requirements.txt
-python manage.py migrate
-python manage.py runserver
 ```
 
-### **Terminal 2: Frontend**
+**Error: "Port 8000 is already in use"**
 ```bash
-cd frontend
-npm install
-npm start
-```
-
----
-
-## 🌐 Accessing the Application
-
-Once both servers are running:
-
-1. **Frontend:** http://localhost:3000
-2. **Backend API:** http://localhost:8000/api/
-
-### **Available Pages:**
-
-- **Home (Analyzer):** http://localhost:3000/
-  - Analyze SMS messages
-  - See real-time predictions
-  - View model confidence scores
-
-- **Dashboard:** http://localhost:3000/dashboard
-  - View analytics and statistics
-  - See message history
-  - Monitor model performance
-  - Delete messages
-
-- **About:** http://localhost:3000/about
-  - Learn about the system
-  - View model information
-  - See features
-
----
-
-## 🧪 Testing the System
-
-### **Test 1: Analyze a Spam Message**
-
-1. Go to http://localhost:3000
-2. Enter: `WINNER! You won $10000! Click now to claim!`
-3. Click "Analyze Message"
-4. Expected: **Category: Spam** (High confidence)
-
-### **Test 2: Analyze an OTP**
-
-1. Enter: `Your OTP is 123456. Valid for 10 minutes.`
-2. Click "Analyze Message"
-3. Expected: **Category: OTP** (High confidence)
-
-### **Test 3: View Dashboard**
-
-1. Go to http://localhost:3000/dashboard
-2. You should see:
-   - Total messages analyzed
-   - Spam detection rate
-   - Model accuracy: **96.55%**
-   - Message history table
-
----
-
-## 🔍 Troubleshooting
-
-### **Problem: Backend won't start**
-
-**Error:** `Port 8000 is already in use`
-
-**Solution:**
-```bash
-# Windows - Find and kill process on port 8000
+# Kill the process using port 8000
+# Windows
 netstat -ano | findstr :8000
-taskkill /PID <PID_NUMBER> /F
+taskkill /PID <process-id> /F
 
-# Then restart
-python manage.py runserver
+# Mac/Linux
+lsof -ti:8000 | xargs kill -9
+
+# Or use a different port
+python manage.py runserver 8001
 ```
 
----
-
-### **Problem: Frontend won't start**
-
-**Error:** `Port 3000 is already in use`
-
-**Solution:**
+**Error: "NLTK data not found"**
 ```bash
-# Kill process on port 3000
-# Windows:
+python -c "import nltk; nltk.download('punkt'); nltk.download('stopwords'); nltk.download('vader_lexicon')"
+```
+
+**Error: "Database is locked"**
+```bash
+# Close all terminals running the backend
+# Delete db.sqlite3 and run migrations again
+rm db.sqlite3
+python manage.py migrate
+```
+
+### Frontend Issues
+
+**Error: "npm: command not found"**
+- Install Node.js from https://nodejs.org/
+
+**Error: "Port 3000 is already in use"**
+```bash
+# Kill the process using port 3000
+# Windows
 netstat -ano | findstr :3000
-taskkill /PID <PID_NUMBER> /F
+taskkill /PID <process-id> /F
 
-# Or use a different port:
-set PORT=3001 && npm start
+# Mac/Linux
+lsof -ti:3000 | xargs kill -9
 ```
 
----
-
-### **Problem: "Cannot reach server" error**
-
-**Cause:** Backend is not running
-
-**Solution:**
-1. Check if backend terminal is still running
-2. Restart backend: `python manage.py runserver`
-3. Refresh frontend (Ctrl+Shift+R)
-
----
-
-### **Problem: "Module not found" errors**
-
-**Backend:**
+**Error: "Module not found"**
 ```bash
-pip install -r requirements.txt
-```
-
-**Frontend:**
-```bash
-cd frontend
+# Delete node_modules and reinstall
+rm -rf node_modules package-lock.json
 npm install
 ```
 
+**Error: "Cannot connect to backend"**
+- Make sure backend is running on http://localhost:8000
+- Check frontend/.env file has correct API URL
+- Check browser console for CORS errors
+
 ---
 
-### **Problem: Database errors**
+## 🔄 Stopping the Application
 
-**Solution:**
+### Stop Backend
+1. Go to the terminal running the backend
+2. Press `Ctrl + C`
+3. Deactivate virtual environment: `deactivate`
+
+### Stop Frontend
+1. Go to the terminal running the frontend
+2. Press `Ctrl + C`
+
+---
+
+## 📊 Testing the ML Models
+
+### Check Model Accuracy
 ```bash
 cd backend
-python manage.py migrate
+python test_accuracy.py
 ```
 
-If still having issues:
+### Train New Models (Optional)
 ```bash
-# Delete database and recreate
-del db.sqlite3  # Windows
-rm db.sqlite3   # Mac/Linux
-
-# Recreate
-python manage.py migrate
+cd backend
 python train_models.py
 ```
 
----
-
-## 📱 Running on Mobile/Other Devices
-
-### **Access from Phone (Same WiFi)**
-
-1. Find your computer's IP address:
-   ```bash
-   # Windows
-   ipconfig
-   # Look for "IPv4 Address" (e.g., 192.168.1.100)
-   
-   # Mac/Linux
-   ifconfig
-   ```
-
-2. On your phone's browser, go to:
-   - Frontend: `http://192.168.1.100:3000`
-   - Backend: `http://192.168.1.100:8000`
-
-3. Make sure both devices are on the same WiFi network
+This will:
+- Train 5 different ML models
+- Save the best model
+- Generate accuracy reports
 
 ---
 
-## 🛑 Stopping the Servers
+## 🗄️ Database Management
 
-### **Stop Backend:**
-- Press `Ctrl+C` in the backend terminal
-
-### **Stop Frontend:**
-- Press `Ctrl+C` in the frontend terminal
-
-### **Deactivate Virtual Environment:**
+### View Database
 ```bash
-deactivate
+cd backend
+python manage.py dbshell
 ```
 
----
+### Reset All Data
+- Use the "Reset Data" button in the Dashboard
+- Or manually: Delete `backend/db.sqlite3` and run migrations
 
-## 📊 Project Structure
-
-```
-Project Root/
-├── backend/                 # Django Backend
-│   ├── api/                # API endpoints
-│   ├── ml_models/          # ML models and training
-│   │   └── trained_models/ # Saved models (96.55% accuracy)
-│   ├── manage.py           # Django management
-│   ├── requirements.txt    # Python dependencies
-│   └── train_models.py     # Model training script
-│
-├── frontend/               # React Frontend
-│   ├── src/
-│   │   ├── components/    # React components
-│   │   └── services/      # API services
-│   ├── package.json       # Node dependencies
-│   └── public/            # Static files
-│
-└── data/                  # Training dataset
-    └── sample_sms_dataset.csv  # 286 SMS samples
-```
-
----
-
-## 🔑 Key Features
-
-✅ **Real-time SMS Analysis**
-- Instant classification (spam, promotion, OTP, important, personal)
-- 96.55% accuracy
-- Confidence scores
-
-✅ **Advanced ML Models**
-- 5 different algorithms
-- Ensemble voting
-- TF-IDF vectorization
-
-✅ **Professional Dashboard**
-- Analytics and statistics
-- Message history
-- Model performance metrics
-- Delete functionality
-
-✅ **Responsive Design**
-- Works on desktop, tablet, mobile
-- Glassmorphism UI
-- Dark mode toggle
-
----
-
-## 📝 Common Commands
-
-### **Backend Commands:**
+### Create Backup
 ```bash
-# Start server
+cd backend
+cp db.sqlite3 db.sqlite3.backup
+```
+
+---
+
+## 🎨 Development Tips
+
+### Backend Development
+```bash
+# Run with auto-reload (default)
 python manage.py runserver
 
-# Run migrations
+# Run on different port
+python manage.py runserver 8001
+
+# Run on all interfaces (accessible from other devices)
+python manage.py runserver 0.0.0.0:8000
+
+# Create new migration
+python manage.py makemigrations
+
+# Apply migrations
 python manage.py migrate
 
-# Train models
-python train_models.py
-
-# Check accuracy
-python test_accuracy.py
-
-# Create superuser (admin)
-python manage.py createsuperuser
+# Access admin panel
+# http://localhost:8000/admin/
 ```
 
-### **Frontend Commands:**
+### Frontend Development
 ```bash
 # Start development server
 npm start
@@ -408,86 +281,185 @@ npm run build
 
 # Run tests
 npm test
+
+# Lint code
+npm run lint
 ```
 
 ---
 
-## 🎓 First Time Setup (Complete)
+## 📁 Project Structure
 
+```
+project/
+├── backend/                 # Django API
+│   ├── api/                # API endpoints
+│   ├── ml_models/          # ML models and training
+│   ├── sms_security/       # Django settings
+│   ├── manage.py           # Django management
+│   └── requirements.txt    # Python dependencies
+│
+├── frontend/               # React UI
+│   ├── src/               # Source code
+│   │   ├── components/    # React components
+│   │   ├── services/      # API services
+│   │   └── App.js         # Main app
+│   ├── public/            # Static files
+│   └── package.json       # Node dependencies
+│
+└── data/                  # Training data
+    └── sample_sms_dataset.csv
+```
+
+---
+
+## 🔐 Environment Variables
+
+### Backend (.env)
+Create `backend/.env` file:
+```env
+SECRET_KEY=your-secret-key-here
+DEBUG=True
+ALLOWED_HOSTS=localhost,127.0.0.1
+CORS_ALLOWED_ORIGINS=http://localhost:3000
+```
+
+### Frontend (.env)
+Already configured in `frontend/.env`:
+```env
+REACT_APP_API_URL=http://localhost:8000
+```
+
+---
+
+## 📝 Common Commands Cheat Sheet
+
+### Backend
 ```bash
-# 1. Clone/Download project
-cd "D:\Jayy\ME\Project\Spam Detection"
-
-# 2. Setup Backend
 cd backend
-python -m venv venv
-venv\Scripts\activate
-pip install -r requirements.txt
-python manage.py migrate
-python train_models.py
-
-# 3. Setup Frontend (new terminal)
-cd frontend
-npm install
-
-# 4. Run Backend (terminal 1)
-cd backend
-venv\Scripts\activate
-python manage.py runserver
-
-# 5. Run Frontend (terminal 2)
-cd frontend
-npm start
-
-# 6. Open browser
-# http://localhost:3000
+venv\Scripts\activate              # Activate virtual environment (Windows)
+source venv/bin/activate           # Activate virtual environment (Mac/Linux)
+python manage.py runserver         # Start server
+python manage.py migrate           # Run migrations
+python manage.py createsuperuser   # Create admin user
+python test_accuracy.py            # Test model accuracy
+python train_models.py             # Train new models
+deactivate                         # Deactivate virtual environment
 ```
 
----
-
-## ✅ Success Checklist
-
-- [ ] Python 3.8+ installed
-- [ ] Node.js 14+ installed
-- [ ] Backend dependencies installed
-- [ ] Database migrated
-- [ ] ML models trained (96.55% accuracy)
-- [ ] Backend running on port 8000
-- [ ] Frontend dependencies installed
-- [ ] Frontend running on port 3000
-- [ ] Browser opens to http://localhost:3000
-- [ ] Can analyze SMS messages
-- [ ] Dashboard shows statistics
-
----
-
-## 🆘 Need Help?
-
-### **Check Backend Status:**
+### Frontend
 ```bash
-curl http://localhost:8000/api/health/
+cd frontend
+npm install                        # Install dependencies
+npm start                          # Start development server
+npm run build                      # Build for production
+npm test                           # Run tests
 ```
-Should return: `{"status": "healthy"}`
-
-### **Check Frontend Status:**
-Open: http://localhost:3000
-Should show the TextGuard AI homepage
-
-### **View Backend Logs:**
-Check the terminal where backend is running for error messages
-
-### **View Frontend Logs:**
-Press F12 in browser → Console tab
 
 ---
 
-## 🎉 You're All Set!
+## 🌐 Accessing from Other Devices
 
-Your TextGuard AI SMS Security System is now running with:
-- ✅ 96.55% accuracy
-- ✅ 5 ML models
-- ✅ Real-time analysis
-- ✅ Professional dashboard
-- ✅ Responsive design
+### On Same Network (Phone, Tablet, etc.)
 
-**Enjoy analyzing SMS messages!** 🚀
+1. **Find your computer's IP address**:
+   ```bash
+   # Windows
+   ipconfig
+   # Look for "IPv4 Address" (e.g., 192.168.1.100)
+   
+   # Mac/Linux
+   ifconfig
+   # Look for "inet" (e.g., 192.168.1.100)
+   ```
+
+2. **Start backend on all interfaces**:
+   ```bash
+   cd backend
+   python manage.py runserver 0.0.0.0:8000
+   ```
+
+3. **Update frontend API URL**:
+   Edit `frontend/.env`:
+   ```env
+   REACT_APP_API_URL=http://192.168.1.100:8000
+   ```
+
+4. **Start frontend**:
+   ```bash
+   cd frontend
+   npm start
+   ```
+
+5. **Access from other device**:
+   - Open browser on phone/tablet
+   - Go to: `http://192.168.1.100:3000`
+
+---
+
+## 🚀 Production Deployment
+
+See these guides:
+- **Railway**: `RAILWAY_QUICK_SETUP.md`
+- **Detailed Guide**: `RAILWAY_DEPLOYMENT_GUIDE.txt`
+
+---
+
+## 📞 Need Help?
+
+### Check Logs
+- **Backend**: Terminal running `python manage.py runserver`
+- **Frontend**: Terminal running `npm start`
+- **Browser**: Press F12 → Console tab
+
+### Common Issues
+1. Backend not starting → Check Python version, virtual environment
+2. Frontend not starting → Check Node.js version, npm install
+3. Can't analyze messages → Check backend is running, check browser console
+4. CORS errors → Check CORS_ALLOWED_ORIGINS in backend settings
+
+---
+
+## ✅ Quick Verification
+
+After starting both servers, verify everything works:
+
+1. **Backend Health Check**:
+   - Open: http://localhost:8000/api/health/
+   - Should see: `{"status": "healthy", "message": "..."}`
+
+2. **Frontend Loading**:
+   - Open: http://localhost:3000
+   - Should see: SMS Security Assistant interface
+
+3. **Test Analysis**:
+   - Enter message: "Congratulations! You won $1000"
+   - Click "Analyze Message"
+   - Should see: Spam classification with high confidence
+
+---
+
+## 🎯 Summary
+
+**To run the project:**
+
+1. **Terminal 1 (Backend)**:
+   ```bash
+   cd backend
+   venv\Scripts\activate
+   python manage.py runserver
+   ```
+
+2. **Terminal 2 (Frontend)**:
+   ```bash
+   cd frontend
+   npm start
+   ```
+
+3. **Open Browser**:
+   - Go to http://localhost:3000
+   - Start analyzing messages!
+
+---
+
+**Status**: Ready to run! Follow the steps above. 🚀
