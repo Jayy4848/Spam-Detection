@@ -160,6 +160,7 @@ class PredictView(APIView):
             phishing_score=phishing_result['score'],
             risk_level=advanced_result['risk_level'],
             message_hash=message_hash,
+            message_text=message,  # Store the actual message text
             language=language,
             sentiment_score=advanced_result['sentiment_score'],
             urgency_score=advanced_result['urgency_score'],
@@ -472,7 +473,8 @@ class RecentMessagesView(APIView):
                     'has_financial_terms': msg.has_financial_terms,
                     'language': msg.language,
                     'timestamp': msg.timestamp.isoformat(),
-                    'message_preview': msg.message_hash[:16] + '...',  # Show partial hash as preview
+                    'message_hash': msg.message_hash,
+                    'message_text': msg.message_text if msg.message_text else 'No message text available',  # Return actual message
                 })
             
             return Response({
